@@ -1,0 +1,18 @@
+@font-face {
+    font-family: recoletalight;
+    src: url(../public/fonts/Recoleta-Light.ttf);
+  }
+  @font-face {
+    font-family: recoletamid;
+    src: url(../public/fonts/Recoleta-Medium.ttf);
+  }
+  
+  @font-face {
+    font-family: recoletareg;
+    src: url(../public/fonts/Recoleta-Regular.ttf);
+  }
+  @font-face {
+    font-family: recoletasemi;
+    src: url(../public/fonts/Recoleta-SemiBold.ttf);
+  }
+  
