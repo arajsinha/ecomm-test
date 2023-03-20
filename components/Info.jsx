@@ -31,7 +31,7 @@ const Info = () => {
             trial.
           </p>
         </div>
-        <div className="about">
+        <div id="about" className="about">
           <h2>About Neend Mattress</h2>
           <p>
             Neend is one of the largest mattress manufacturers in the India, has
@@ -64,7 +64,7 @@ const Info = () => {
             compromising quality and service.
           </p>
         </div>
-        <div className="why">
+        <div id="whyus" className="why">
           <h2>Why Neend Mattress?</h2>
           <p>
             We are a quality-conscious firm and continuously struggle hard to
@@ -85,7 +85,7 @@ const Info = () => {
             that’s beyond your dreams.
           </p>
         </div>
-        <div className="quality">
+        <div id="qa" className="quality">
           <h2>Quality Assurance</h2>
           <p>
             We believe that innovation should happen every single day. Design

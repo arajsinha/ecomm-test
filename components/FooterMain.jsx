@@ -73,7 +73,7 @@ const FooterMain = () => {
             <div className="footerinfoholder">
               <a href="/">Help</a>
             </div>
-            <div className="footerinfoholder">
+            <div id="contact" className="footerinfoholder">
               <p className="footertitle">
                 Contact Us at <a className="phone" href="tel:9108447740 ">9108447740 </a>{" "}
               </p>

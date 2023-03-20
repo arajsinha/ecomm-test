@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Domine:wght@400;500;600;700&family=Noto+Serif+Display:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500;1,600&family=Roboto+Mono:wght@100;300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Noto+Serif+Display:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500;1,600&family=Roboto+Mono:wght@100;300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 @font-face {
   font-family: recoletalight;
@@ -26,6 +26,8 @@ body,
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   box-sizing: border-box;
+  font-family: 'Space Grotesk';
+  /* overflow-x: hidden; */
 
 }
 
@@ -38,11 +40,32 @@ a {
   text-decoration: none;
 }
 
+.bootstrapNavbar a{
+  font-family: 'montserrat' !important;
+  color: black;
+  font-weight: 500;
+  font-size: 13px;
+}
+
 .main-container {
   max-width: 1400px;
   margin: auto;
   width: 100%;
 
+}
+
+.infoContainer{
+  border-radius: 15px;
+}
+
+.infoContainer h2{
+  font-family: 'Montserrat';
+  font-weight: 400;
+}
+
+.infoContainer p{
+  font-size: 14px;
+  color: #464646;
 }
 
 .layout {
@@ -125,6 +148,19 @@ a {
   color: white !important;
   display: block;
   text-decoration: none;
+}
+
+.mainFooter a{
+  font-family: 'recoletamid';
+  font-size: 14px;
+}
+
+.mainFooter .footertitle{
+  font-size: 14px;
+}
+
+.mainFooter .footerdesc{
+  font-size: 13px;
 }
 
 .socials .social-icons {
@@ -231,12 +267,12 @@ span.text-red {
   cursor: pointer;
   transform: scale(1, 1);
   transition: transform 0.5s ease;
-  color: #324d67;
+  color: #5430b3;
 
 }
 
 .product-card:hover {
-  transform: scale(1.1, 1.1)
+  /* transform: scale(1.1, 1.1) */
 }
 
 .product-image {
@@ -248,12 +284,47 @@ span.text-red {
 
 .product-name {
   font-weight: 500;
+  font-size: 13px;
+  margin-top: 3%;
+  /* width: 50%; */
+}
+
+.price-discount-holder{
+  display: flex;
+}
+
+.product-origprice{
+  color: grey;
+  text-decoration: line-through;
+  margin-right: 5%;
+}
+
+.category-img-holder img{
+  border-radius: 15px;
+  margin-bottom: 3%;
+}
+
+.category-text-holder p{
+  color: #5430b3;
+}
+
+.categoryCursor{
+  cursor: pointer;
+}
+
+.slugger{
+  font-size: 25px;
+}
+
+.product-discount{
+  color: #31a831;
 }
 
 .product-price {
   font-weight: 800;
-  margin-top: 6px;
+  margin-top: 0;
   color: black;
+  margin-right: 5%;
 }
 
 .hero-banner-container {
@@ -437,7 +508,7 @@ span.text-red {
 }
 
 .footer-container {
-  color: #324d67;
+  color: #4b2778;
   text-align: center;
   margin-top: 20px;
   padding: 30px 10px;
@@ -573,7 +644,7 @@ span.text-red {
   margin-top: 10px;
   margin-top: 40px;
   text-transform: uppercase;
-  background-color: #f02d34;
+  background-color: #5430b3 !important;
   color: #fff;
   cursor: pointer;
   transform: scale(1, 1);
@@ -589,7 +660,7 @@ span.text-red {
   gap: 40px;
   margin: 40px;
   margin-top: 60px;
-  color: #324d67;
+  color: #000000;
 
 }
 
@@ -597,22 +668,26 @@ span.text-red {
   border-radius: 15px;
   background-color: #ebebeb;
 
-  width: 400px;
-  height: 400px;
+  width: 500px;
+  height: 500px;
   cursor: pointer;
   transition: .3s ease-in-out;
 }
 
 .product-detail-image:hover {
-  background-color: #f02d34;
+  background-color: #5430b3;
 
 }
 
 .small-images-container {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   margin-top: 20px;
 }
+
+/* .small-images-holder{
+  width: 100px;
+} */
 
 .small-image {
   border-radius: 8px;
@@ -627,11 +702,15 @@ span.text-red {
 }
 
 .reviews {
-  color: #f02d34;
+  color: #5430b3;
   margin-top: 10px;
   display: flex;
   gap: 5px;
   align-items: center;
+}
+
+.product-detail-desc h1{
+  font-family: recoletasemi;
 }
 
 .product-detail-desc h4 {
@@ -651,7 +730,7 @@ span.text-red {
   font-weight: 700;
   font-size: 26px;
   margin-top: 30px;
-  color: #f02d34;
+  color: #5430b3;
 }
 
 .price .old-price,
@@ -675,12 +754,12 @@ span.text-red {
 
 .buttons .add-to-cart {
   padding: 10px 20px;
-  border: 1px solid #f02d34;
+  border: 1px solid #5430b3;
   margin-top: 40px;
   font-size: 18px;
   font-weight: 500;
   background-color: white;
-  color: #f02d34;
+  color: #5430b3;
   cursor: pointer;
   width: 200px;
   transform: scale(1, 1);
@@ -695,7 +774,7 @@ span.text-red {
   width: 200px;
 
   padding: 10px 20px;
-  background-color: #f02d34;
+  background-color: #5430b3;
   color: white;
   border: none;
   margin-top: 40px;

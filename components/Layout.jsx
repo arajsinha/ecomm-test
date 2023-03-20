@@ -12,8 +12,8 @@ const Layout = ({ children }) => {
         <title>Major Project Furniture Store</title>
       </Head>
       <header>
-        <Navbar />
-        {/* <BootstrapNavbar/> */}
+        {/* <Navbar /> */}
+        <BootstrapNavbar/>
       </header>
       <main className="main-container">
         {children}

@@ -14,7 +14,7 @@ const BootstrapNavbar = () => {
   const { showCart, setShowCart, totalQuantities } = useStateContext();
 
   return (
-    <Navbar collapseOnSelect expand="lg">
+    <Navbar collapseOnSelect expand="lg" className="bootstrapNavbar">
       <Container>
         <Navbar.Brand><Link href="/"><img style={{cursor: 'pointer'}} src='https://wakefitdev.gumlet.io/img/wakefit_blacklogo_mob.svg?w=360'></img></Link></Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -24,10 +24,10 @@ const BootstrapNavbar = () => {
             <Nav.Link href="#pricing">Pricing</Nav.Link> */}
           </Nav>
           <Nav>
-            <Nav.Link><Link href="/">About Us</Link></Nav.Link>
-            <Nav.Link><Link href="/">Why Us</Link></Nav.Link>
-            <Nav.Link><Link href="/">Quality Assurance</Link></Nav.Link>
-            <Nav.Link><Link href="/">Contact</Link></Nav.Link>
+            <Nav.Link href="#about">About Us</Nav.Link>
+            <Nav.Link href="#whyus">Why Us</Nav.Link>
+            <Nav.Link href="#qa">Quality Assurance</Nav.Link>
+            <Nav.Link href="#contact">Contact</Nav.Link>
             <button
               type="button"
               className="cart-icon"

@@ -5,10 +5,10 @@ const Footer = () => {
   return (
     <div className="footer-container">
       <p>© 2023 Neend Mattresses. All Rights Reserved</p>
-      <p className="icons">
+      {/* <p className="icons">
         <AiFillInstagram />
         <AiOutlineTwitter />
-      </p>
+      </p> */}
     </div>
   )
 }

@@ -9,7 +9,7 @@ const HappyStrip = () => {
                     <div className="mainicon">
                         <img src='https://cdn-icons-png.flaticon.com/512/3110/3110076.png'></img>
                     </div>
-                    <div className="icontext"><p>Custom Mattress</p></div>
+                    <div className="icontext"><p>Customizable Products</p></div>
                 </div>
                 <div className="strip col-md-4">
                     <div className="mainicon">
