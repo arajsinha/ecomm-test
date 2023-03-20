@@ -9,8 +9,9 @@ const FooterMain = () => {
           <div className="col-md-4 col-sm-12 socials">
             <div className="logo">
               <img
-                src="https://wakefitdev.gumlet.io/consumer-react/assets/images/Footer/wakefit%20logo%202%201.png?w=400"
-                alt=""
+                src="https://res.cloudinary.com/dwkhm30wx/image/upload/v1679340948/SP-EComm/neend_g05ogi.jpg"
+                alt="logo"
+                style={{width: '20%'}}
               />
             </div>
             <div className="footerinfoholder">

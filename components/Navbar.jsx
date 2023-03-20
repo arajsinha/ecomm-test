@@ -12,7 +12,7 @@ const Navbar = () => {
     <div className="navbar-container">
       <p className="logo">
         <Link href="/">
-          <img style={{cursor: 'pointer'}} src='https://wakefitdev.gumlet.io/img/wakefit_blacklogo_mob.svg?w=360'></img>
+          <img style={{cursor: 'pointer', width: '20%'}} src='https://res.cloudinary.com/dwkhm30wx/image/upload/v1679340948/SP-EComm/neend_g05ogi.jpg'></img>
         </Link>
       </p>
 
