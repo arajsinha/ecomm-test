@@ -11,7 +11,9 @@ const Navbar = () => {
   return (
     <div className="navbar-container">
       <p className="logo">
-        <Link href="/">Major Project Store</Link>
+        <Link href="/">
+          <img style={{cursor: 'pointer'}} src='https://wakefitdev.gumlet.io/img/wakefit_blacklogo_mob.svg?w=360'></img>
+        </Link>
       </p>
 
       <button type="button" className="cart-icon" onClick={() => setShowCart(true)}>

@@ -1,11 +1,20 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { client } from '../lib/client';
 import { Product, FooterBanner, HeroBanner } from '../components';
+import HeroImageBanner from '../components/HeroImageBanner';
+import HappyStrip from '../components/HappyStrip';
+import Info from '../components/Info';
+import FooterMain from '../components/FooterMain';
 
 const Home = ({ products, bannerData }) => (
   <div>
-    <HeroBanner heroBanner={bannerData.length && bannerData[0]}  />
+    {/* <HeroBanner heroBanner={bannerData.length && bannerData[0]}  /> */}
+    <HeroImageBanner heroBanner={bannerData.length && bannerData[0]}/>
+    <HappyStrip/>
+    {console.log("bannerdata length is")}
+    {console.log(bannerData[0])}
     <div className="products-heading">
       <h2>Best Seller Products</h2>
       <p>We have some amazing products</p>
@@ -15,7 +24,9 @@ const Home = ({ products, bannerData }) => (
       {products?.map((product) => <Product key={product._id} product={product} />)}
     </div>
 
-    <FooterBanner footerBanner={bannerData && bannerData[0]} />
+    <Info/>
+    {/* <FooterBanner footerBanner={bannerData && bannerData[0]} /> */}
+    <FooterMain/>
   </div>
 );
 

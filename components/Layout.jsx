@@ -3,6 +3,7 @@ import Head from 'next/head';
 
 import Navbar from './Navbar';
 import Footer from './Footer';
+import BootstrapNavbar from './NavbarBootstrap';
 
 const Layout = ({ children }) => {
   return (
@@ -12,6 +13,7 @@ const Layout = ({ children }) => {
       </Head>
       <header>
         <Navbar />
+        {/* <BootstrapNavbar/> */}
       </header>
       <main className="main-container">
         {children}
