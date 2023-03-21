@@ -8,7 +8,7 @@ import FooterMain from "../../components/FooterMain";
 
 const TVPage = ({ products }) => (
   <div>
-    {console.log(products[1]['category'])}
+    {/* {console.log(products[1]['category'])} */}
     <div className="products-heading">
       <h2>Shop TV Units & Coffee Tables</h2>
     </div>

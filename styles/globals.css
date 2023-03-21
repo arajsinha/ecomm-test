@@ -798,6 +798,17 @@ span.text-red {
 
 }
 
+.flash-sale{
+  margin-top: 5%;
+  background-color: #eee8ff;
+  padding: 3%;
+  border-radius: 15px;
+}
+
+.flash-sale-container{
+  /* padding: 5%; */
+}
+
 .maylike-products-wrapper {
   margin-top: 120px;
 }

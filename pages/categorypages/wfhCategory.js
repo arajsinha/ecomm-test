@@ -8,7 +8,7 @@ import FooterMain from "../../components/FooterMain";
 
 const WFHPage = ({ products }) => (
   <div>
-    {console.log(products[1]['category'])}
+    {/* {console.log(products[1]['category'])} */}
     <div className="products-heading">
       <h2>Shop for WFH</h2>
     </div>

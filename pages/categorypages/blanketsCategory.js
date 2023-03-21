@@ -7,7 +7,7 @@ import FooterMain from "../../components/FooterMain";
 
 const BlanketsPage = ({ products }) => (
   <div>
-    {console.log(products[1]['category'])}
+    {/* {console.log(products[1]['category'])} */}
     <div className="products-heading">
       <h2>Shop Blankets</h2>
     </div>

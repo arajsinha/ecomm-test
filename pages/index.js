@@ -10,9 +10,8 @@ import FooterMain from "../components/FooterMain";
 import Category from "../components/Category";
 
 const Home = ({ products, bannerData }) => (
-  
   <div>
-  {/* {console.log(products)} */}
+    {/* {console.log(products)} */}
     {/* <HeroBanner heroBanner={bannerData.length && bannerData[0]}  /> */}
     <HeroImageBanner heroBanner={bannerData.length && bannerData[0]} />
     <HappyStrip />
@@ -24,18 +23,33 @@ const Home = ({ products, bannerData }) => (
     </div>
 
     <div className="products-container">
-      {products?.map((product) => (
-        <Product key={product._id} product={product} />
-      ))}
+      {products?.map((product, index) => {
+        if (products[index]["category"] == "mattress") {
+          return <Product key={product._id} product={product} />;
+        }
+      })}
     </div>
 
-<hr/>
+    <hr />
 
     <div className="products-heading category-heading">
       <h2>Shop By Categories</h2>
     </div>
     <div className="products-container category-container">
-      <Category/>
+      <Category />
+    </div>
+
+    <div className="flash-sale">
+      <div className="products-heading flash-sale-heading">
+        <h2>Flash Sale</h2>
+      </div>
+      <div className="products-container flash-sale-container">
+        {products?.map((product, index) => {
+          if (products[index]["sale"] == "yes") {
+            return <Product key={product._id} product={product} />;
+          }
+        })}
+      </div>
     </div>
 
     <Info />
