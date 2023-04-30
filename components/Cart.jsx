@@ -26,6 +26,7 @@ const Cart = () => {
     if(response.statusCode === 500) return;
     
     const data = await response.json();
+    console.log(data)
 
     toast.loading('Redirecting...');
 
@@ -63,6 +64,7 @@ const Cart = () => {
         <div className="product-container">
           {cartItems.length >= 1 && cartItems.map((item) => (
             <div className="product" key={item._id}>
+            {console.log(item._id)}
               <img src={urlFor(item?.image[0])} className="cart-product-image" />
               <div className="item-desc">
                 <div className="flex top">

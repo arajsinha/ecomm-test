@@ -798,11 +798,40 @@ span.text-red {
 
 }
 
+.collection-products{
+  text-align: left;
+}
+
 .flash-sale{
   margin-top: 5%;
   background-color: #eee8ff;
   padding: 3%;
   border-radius: 15px;
+  align-items: center;
+}
+
+.all-flash-sale{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  /* padding: 1% 5%; */
+}
+
+.all-flash-sale button {
+  padding: 1% 5%;
+  color: white;
+  background-color: #5430b3;
+  border: none;
+  border-radius: 30px;
+}
+
+.all-flash-sale button:hover{
+  background-color: transparent;
+  /* animation: ease-in 0.5s infinite; */
+  border: 1px solid black;
+  color: black;
 }
 
 .flash-sale-container{
@@ -893,6 +922,22 @@ span.text-red {
 
 .product-max-qty {
   margin-top: 10px;
+}
+
+.myorders{
+  padding: 3%;
+}
+
+.ordercard{
+  background-color: #eee8ff;
+  padding: 2% 3%;
+  margin: 2% 10%;
+  border-radius: 20px;
+  /* width; */
+}
+
+.ordercard span{
+  font-weight: 600
 }
 
 @media screen and (max-width:800px) {

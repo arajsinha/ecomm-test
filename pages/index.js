@@ -8,6 +8,7 @@ import HappyStrip from "../components/HappyStrip";
 import Info from "../components/Info";
 import FooterMain from "../components/FooterMain";
 import Category from "../components/Category";
+import Link from "next/link";
 
 const Home = ({ products, bannerData }) => (
   <div>
@@ -15,19 +16,24 @@ const Home = ({ products, bannerData }) => (
     {/* <HeroBanner heroBanner={bannerData.length && bannerData[0]}  /> */}
     <HeroImageBanner heroBanner={bannerData.length && bannerData[0]} />
     <HappyStrip />
-    {/* {console.log("bannerdata length is")} */}
-    {/* {console.log(bannerData[0])} */}
-    <div className="products-heading">
-      <h2>Shop Our Collection</h2>
-      {/* <p>We have some amazing products</p> */}
-    </div>
 
-    <div className="products-container">
-      {products?.map((product, index) => {
-        if (products[index]["category"] == "mattress") {
+    <div className="collection-products ">
+      <div className="products-heading">
+        <h2>Shop Our Collection</h2>
+        {/* <p>We have some amazing products</p> */}
+      </div>
+
+      <div className="products-container">
+        {products?.slice(0, 6).map((product, index) => {
+          {/* {console.log(product._id)} */}
           return <Product key={product._id} product={product} />;
-        }
-      })}
+        })}
+      </div>
+      <Link href="/categorypages/allProducts">
+        <div className="all-flash-sale">
+          <button className="view-collection">View All</button>
+        </div>
+      </Link>
     </div>
 
     <hr />
@@ -44,12 +50,22 @@ const Home = ({ products, bannerData }) => (
         <h2>Flash Sale</h2>
       </div>
       <div className="products-container flash-sale-container">
-        {products?.map((product, index) => {
-          if (products[index]["sale"] == "yes") {
-            return <Product key={product._id} product={product} />;
+        {products?.slice(0, 6).map((product, index) => {
+          //var count = 0;
+          //if (products[index]["sale"] == "yes" && count < 6) {
+          {
+            /* console.log(index); */
           }
+          //count++;
+          return <Product key={product._id} product={product} />;
+          //}
         })}
       </div>
+      <Link href="/categorypages/flashSale">
+        <div className="all-flash-sale">
+          <button>View All</button>
+        </div>
+      </Link>
     </div>
 
     <Info />
