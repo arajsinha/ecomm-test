@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import React from "react";
 import { useRouter } from "next/router";
+import { route } from "next/dist/server/router";
 
 let session_ids = [];
 
 let usermail = "";
+let reload = "";
 
 const stripeApiSessionsUrl =
   "https://api.stripe.com/v1/checkout/sessions?limit=100";
@@ -59,13 +61,28 @@ const getCustomers = async (setProducts, setLoading) => {
   }
 };
 
+
+
 export default function order() {
   const router = useRouter();
   usermail = router.query.email;
+  reload = router.query.reload;
+  function reloadHash() {
+    // console.log("reload: ", reload)
+    if(reload == "false") {
+        reload = "true";
+        location.replace(`/order?email=${usermail}&reload=true`);
+    }
+}
+
   console.log("email: ", usermail);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    //   router.replace(router.asPath)
+    setTimeout(reloadHash, 1000)
+    
     getCustomers(setProducts, setLoading);
   }, []);
 
@@ -80,7 +97,7 @@ export default function order() {
           <div key={index} className="ordercard">
             {product.data.map((data, dataIndex) => (
               <div key={dataIndex}>
-            <h3 className="prod-name">{data.description}</h3>
+                <h3 className="prod-name">{data.description}</h3>
                 <p className="prod-price">
                   <span>Unit Price - </span>
                   {data.currency} {data.price.unit_amount / 100}

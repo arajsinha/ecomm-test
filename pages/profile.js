@@ -131,7 +131,7 @@ const Profile = () => {
       <br />
       <br />
       <div className="my-orders">
-        <Link href={`/order?email=${useremail}`}>
+        <Link href={`/order?email=${useremail}&reload=false`}>
           <button
             style={{
               border: "none",
