@@ -78,7 +78,8 @@ const Cart = () => {
         <div className="pincode-container">
           <label htmlFor="pincode">Enter pincode:</label>
           <input
-            type="number"
+            type="text"
+            maxLength={6}
             id="pincode"
             name="pincode"
             value={pincode}

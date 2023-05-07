@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import { client } from "../lib/client";
 import { Product, FooterBanner, HeroBanner } from "../components";
+import Widget from "../components/Widget";
 import HeroImageBanner from "../components/HeroImageBanner";
 import HappyStrip from "../components/HappyStrip";
 import Info from "../components/Info";
@@ -16,7 +17,7 @@ const Home = ({ products, bannerData }) => (
     {/* <HeroBanner heroBanner={bannerData.length && bannerData[0]}  /> */}
     <HeroImageBanner heroBanner={bannerData.length && bannerData[0]} />
     <HappyStrip />
-
+    <Widget />
     <div className="collection-products ">
       <div className="products-heading">
         <h2>Shop Our Collection</h2>
@@ -25,7 +26,9 @@ const Home = ({ products, bannerData }) => (
 
       <div className="products-container">
         {products?.slice(0, 6).map((product, index) => {
-          {/* {console.log(product._id)} */}
+          {
+            /* {console.log(product._id)} */
+          }
           return <Product key={product._id} product={product} />;
         })}
       </div>
@@ -35,7 +38,6 @@ const Home = ({ products, bannerData }) => (
         </div>
       </Link>
     </div>
-
     <hr />
 
     <div className="products-heading category-heading">
