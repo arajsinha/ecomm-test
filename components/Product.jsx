@@ -3,10 +3,11 @@ import Link from "next/link";
 
 import { urlFor } from "../lib/client";
 
-const Product = ({ product: { image, name, slug, price, original } }) => {
+const Product = ({ product: { image, name, slug, price, original, mattressOptions } }) => {
   function calcDiscount(original, price){
     var discount = original-price;
     var total = (discount/original)*100;
+    // console.log(image)
     return Math.ceil(total);
   }
   return (

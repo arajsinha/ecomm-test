@@ -16,13 +16,18 @@
     "bootstrap": "^5.2.3",
     "canvas-confetti": "^1.5.1",
     "firebase": "^9.21.0",
+    "firebaseui": "^6.0.2",
     "next": "12.1.0",
     "next-sanity-image": "^3.2.1",
+    "next-transpile-modules": "^10.0.0",
     "react": "17.0.2",
     "react-bootstrap": "^2.7.2",
     "react-dom": "17.0.2",
+    "react-firebaseui": "^6.0.0",
     "react-hot-toast": "^2.2.0",
     "react-icons": "^4.3.1",
+    "react-phone-input-2": "^2.15.1",
+    "react-phone-number-input": "^3.2.21",
     "stripe": "^8.209.0"
   },
   "devDependencies": {

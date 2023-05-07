@@ -11,9 +11,15 @@ import { Product } from "../../components";
 import { useStateContext } from "../../context/StateContext";
 
 const ProductDetails = ({ product, products }) => {
-  const { image, name, details, price, original } = product;
+  const { image, name, details, price, original, mattressOptions, height } =
+    product;
   const [index, setIndex] = useState(0);
   const { decQty, incQty, qty, onAdd, setShowCart } = useStateContext();
+  const [selectedSize, setSelectedSize] = useState("");
+
+  function handleSizeSelection(size) {
+    setSelectedSize(size);
+  }
 
   const handleBuyNow = () => {
     onAdd(product, qty);
@@ -21,9 +27,9 @@ const ProductDetails = ({ product, products }) => {
     setShowCart(true);
   };
 
-  function calcDiscount(original, price){
-    var discount = original-price;
-    var total = (discount/original)*100;
+  function calcDiscount(original, price) {
+    var discount = original - price;
+    var total = (discount / original) * 100;
     return Math.ceil(total);
   }
 
@@ -55,7 +61,7 @@ const ProductDetails = ({ product, products }) => {
 
         <div className="product-detail-desc">
           <h1>{name}</h1>
-          <div className="reviews">
+          {/* <div className="reviews">
             <div>
               <AiFillStar />
               <AiFillStar />
@@ -64,13 +70,17 @@ const ProductDetails = ({ product, products }) => {
               <AiOutlineStar />
             </div>
             <p>(20)</p>
-          </div>
+          </div> */}
           <h4>Details: </h4>
           <p>{details}</p>
           <div className="price-discount-holder">
-            <p className="product-price slugger" style={{color: '#5430b3'}}>₹{price}</p>
+            <p className="product-price slugger" style={{ color: "#5430b3" }}>
+              ₹{price}
+            </p>
             <p className="product-origprice slugger">₹{original}</p>
-            <p className="product-discount slugger">{calcDiscount(original, price)}% Off</p>
+            <p className="product-discount slugger">
+              {calcDiscount(original, price)}% Off
+            </p>
           </div>
           <div className="quantity">
             <h3>Quantity:</h3>
@@ -96,6 +106,80 @@ const ProductDetails = ({ product, products }) => {
               Buy Now
             </button>
           </div>
+          <br />
+          {mattressOptions && (
+            <div className="variantHolder">
+              <h2>Choose a Size</h2>
+              <br />
+              <div className="sizeButtons">
+                {mattressOptions.map((option) => (
+                  <button
+                    style={{
+                      marginRight: "10px",
+                      padding: "5px 10px",
+                      borderRadius: "50px",
+                      border: "none",
+                      backgroundColor: "black",
+                      color: "white",
+                      cursor: "pointer",
+                    }}
+                    key={option._key}
+                    onClick={() => handleSizeSelection(option.mattressSize)}
+                    className={
+                      option.mattressSize === selectedSize ? "selectedSize" : ""
+                    }
+                  >
+                    {option.mattressSize}
+                  </button>
+                ))}
+              </div>
+              <br />
+              <h3>{selectedSize}</h3>
+              <br />
+              {selectedSize && (
+                <div
+                  className="sizeDetails"
+                  style={{ display: "flex", flexWrap: "wrap" }}
+                >
+                  {mattressOptions.map((option) =>
+                    option.mattressSize === selectedSize
+                      ? option.dependentMattressDimensions.map(
+                          (dimension, index) => (
+                            <div key={index} className="productDimensionCard">
+                              <p>
+                                {dimension.length} x {dimension.width} inches
+                              </p>
+                            </div>
+                          )
+                        )
+                      : null
+                  )}
+                </div>
+              )}
+              <br />
+              <h3>Height</h3>
+              <br />
+              <div style={{ display: "flex", flexWrap: "wrap", textAlign: "center" }}>
+                {height.map((option) => (
+                  <div
+                    key={option._key}
+                    style={{
+                      border: "1px solid #ddd",
+                      borderRadius: "10px",
+                      padding: "10px",
+                      marginRight: "10px",
+                      width: "10rem",
+                      marginBottom: "10px",
+                      cursor: "pointer",
+                      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    <p>{option.height} inches</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -142,7 +226,7 @@ export const getStaticProps = async ({ params: { slug } }) => {
   const product = await client.fetch(query);
   const products = await client.fetch(productsQuery);
 
-  console.log(product._id);
+  // console.log(product._id);
 
   return {
     props: { products, product },

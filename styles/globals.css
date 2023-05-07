@@ -924,6 +924,11 @@ span.text-red {
   margin-top: 10px;
 }
 
+.form-container{
+  display: flex;
+  justify-content: center;
+}
+
 .myorders{
   padding: 3%;
 }
@@ -939,6 +944,59 @@ span.text-red {
 .ordercard span{
   font-weight: 600
 }
+
+.sizeDetails {
+  /* display: flex; */
+}
+
+.sizeDetails > div {
+  margin-right: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sizeDetails h3 {
+  margin-top: 0;
+  /* margin: 5%; */
+}
+
+.pincode-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.pincode-container label {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.pincode-container input {
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.pincode-container .error {
+  color: red;
+  font-size: 14
+}
+
+.productDimensionCard {
+  box-sizing: border-box;
+  /* width: calc(50% - 10px); */
+  width: 10rem;
+  padding: 10px;
+  margin: 5px;
+  background-color: #f2f2f2;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
 
 @media screen and (max-width:800px) {
   .hero-banner-container {

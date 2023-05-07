@@ -5,7 +5,7 @@ import getStripe from "../lib/getStripe";
 
 import firebaseConfig from "../lib/firebase";
 import { initializeApp } from "firebase/app";
-import { getAuth, updateProfile, signOut } from "firebase/auth";
+import { getAuth, updateProfile, signOut, updateEmail } from "firebase/auth";
 
 const firebase = initializeApp(firebaseConfig);
 const auth = getAuth(firebase);
@@ -20,7 +20,9 @@ const Profile = () => {
   const [user, setUser] = useState(null);
   const [displayName, setDisplayName] = useState("");
   const [showInput, setShowInput] = useState(false);
+  const [showEmailInput, setShowEmailInput] = useState(false);
   const [newDisplayName, setNewDisplayName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -35,6 +37,10 @@ const Profile = () => {
 
   const handleEditClick = () => {
     setShowInput(true);
+  };
+
+  const handleEmailEditClick = () => {
+    setShowEmailInput(true);
   };
 
   const handleLogout = () => {
@@ -60,6 +66,19 @@ const Profile = () => {
       })
       .catch((error) => {
         console.log(error);
+      });
+  };
+
+  const handleEmailSaveClick = () => {
+    const currentUser = auth.currentUser;
+    updateEmail(auth.currentUser, newEmail)
+      .then(() => {
+        setNewEmail(currentUser.email);
+        setShowEmailInput(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error)
       });
   };
 
@@ -113,7 +132,47 @@ const Profile = () => {
         )}
         <br />
         <h5>Email</h5>
-        <p id="profileEmail">{user.email}</p>
+        {showEmailInput ? (
+          <div>
+            <input
+              type="email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+            />
+            <button
+              onClick={handleEmailSaveClick}
+              style={{
+                border: "none",
+                padding: "0.5% 3%",
+                backgroundColor: "light purple",
+                color: "white",
+                borderRadius: "20px",
+                marginLeft: "10px",
+              }}
+            >
+              Save
+            </button>
+          </div>
+        ) : (
+          <div>
+            <p id="profileEmail">{user.email}</p>
+            <button
+              onClick={handleEmailEditClick}
+              style={{
+                border: "none",
+                padding: "0.5% 3%",
+                backgroundColor: "black",
+                color: "white",
+                borderRadius: "20px",
+              }}
+            >
+              Edit
+            </button>
+          </div>
+        )}
+        <br />
+        <h5>Phone Number</h5>
+        <p id="profileEmail">{user.phoneNumber}</p>
         <br />
         <button
           onClick={handleLogout}

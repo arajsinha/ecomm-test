@@ -4,6 +4,8 @@ import Router, { useRouter } from "next/router";
 
 import firebaseConfig from "../lib/firebase";
 import { initializeApp } from "firebase/app";
+const firebase = initializeApp(firebaseConfig);
+const auth = getAuth(firebase);
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -11,9 +13,9 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
-const firebase = initializeApp(firebaseConfig);
-const auth = getAuth(firebase);
 // const user = userCredential.user;
+
+
 
 const passwordReset = () => {
   let email = document.getElementById("logEmail").value;
@@ -55,13 +57,13 @@ const loginPage = () => {
   let router = useRouter();
   onAuthStateChanged(auth, (user) => {
     if (user) {
-        // alert(user.email);
+      // alert(user.email);
       router.push("/profile");
       const displayName = user.displayName;
       const email = user.email;
       const photoURL = user.photoURL;
       const emailVerified = user.emailVerified;
-      console.log(displayName, email, photoURL, emailVerified)
+      console.log(displayName, email, photoURL, emailVerified);
       //   return <div>Hi</div>;
       // ...
     } else {
@@ -70,7 +72,7 @@ const loginPage = () => {
     }
   });
   return (
-    <div className="body-wrap" style={{ height: "60vh" }}>
+    <div className="body-wrap" style={{ height: "100vh" }}>
       <div
         className="login-form"
         style={{
@@ -136,6 +138,23 @@ const loginPage = () => {
             }}
           />
         </div>
+      </div>
+      <div style={{ display: "flex" }} className="mobile-login">
+        <Link href="/loginmobile?reload=false">
+          <button
+            style={{
+              backgroundColor: "black",
+              color: "white",
+              border: "none",
+              padding: "1% 5%",
+              borderRadius: "20px",
+              margin: "1% auto 2% auto",
+              // transform: "translateX(-50%)"
+            }}
+          >
+            Login with Phone Number
+          </button>
+        </Link>
       </div>
       <Link href="/signup">
         <a
