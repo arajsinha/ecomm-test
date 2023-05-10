@@ -23,7 +23,7 @@ const getUID = auth.onAuthStateChanged((user) => {
   } else {
     // User is signed out
     // ...
-    alert("User not signed in")
+    console.log("Not signed in")
   }
 });
 
