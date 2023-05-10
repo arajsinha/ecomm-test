@@ -12,30 +12,38 @@ import { getAuth, updateProfile, signOut, updateEmail } from "firebase/auth";
 const firebase = initializeApp(firebaseConfig);
 const auth = getAuth(firebase);
 
-let uid
+let uid;
 
 const getUID = auth.onAuthStateChanged((user) => {
-  uid = user.uid
+  if (user) {
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/firebase.User
+    uid = user.uid;
+    // ...
+  } else {
+    // User is signed out
+    // ...
+    Router.push('/')
+  }
 });
-
 
 export default function AddressCollection() {
   const router = useRouter();
 
   const handleCheckout = async () => {
     const query = router.query.body;
-    const billing_address = JSON.stringify(billingAddress)
-    const shipping_address = JSON.stringify(shippingAddress)
-    const full_data = query+billing_address+shipping_address
+    const billing_address = JSON.stringify(billingAddress);
+    const shipping_address = JSON.stringify(shippingAddress);
+    const full_data = query + billing_address + shipping_address;
     const stripe = await getStripe();
-  
+
     const response = await fetch("/api/stripe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "billingaddress": billing_address,
-        "shippingaddress": shipping_address,
-        "useruid": uid
+        billingaddress: billing_address,
+        shippingaddress: shipping_address,
+        useruid: uid,
       },
       body: query,
     });
