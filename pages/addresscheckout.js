@@ -23,7 +23,7 @@ const getUID = auth.onAuthStateChanged((user) => {
   } else {
     // User is signed out
     // ...
-    Router.push('/')
+    alert("User not signed in")
   }
 });
 
