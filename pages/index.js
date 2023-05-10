@@ -17,7 +17,7 @@ const Home = ({ products, bannerData }) => (
     {/* <HeroBanner heroBanner={bannerData.length && bannerData[0]}  /> */}
     <HeroImageBanner heroBanner={bannerData.length && bannerData[0]} />
     <HappyStrip />
-    <Widget />
+    {/* <Widget /> */}
     <div className="collection-products ">
       <div className="products-heading">
         <h2>Shop Our Collection</h2>

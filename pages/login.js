@@ -59,11 +59,11 @@ const loginPage = () => {
     if (user) {
       // alert(user.email);
       router.push("/profile");
-      const displayName = user.displayName;
-      const email = user.email;
-      const photoURL = user.photoURL;
-      const emailVerified = user.emailVerified;
-      console.log(displayName, email, photoURL, emailVerified);
+      // const displayName = user.displayName;
+      // const email = user.email;
+      // const photoURL = user.photoURL;
+      // const emailVerified = user.emailVerified;
+      // console.log(displayName, email, photoURL, emailVerified);
       //   return <div>Hi</div>;
       // ...
     } else {

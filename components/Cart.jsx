@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import Link from "next/link";
+import Router, { useRouter } from "next/router";
 import {
   AiOutlineMinus,
   AiOutlinePlus,
@@ -14,6 +15,7 @@ import { urlFor } from "../lib/client";
 import getStripe from "../lib/getStripe";
 
 const Cart = () => {
+  const router = useRouter()
   const cartRef = useRef();
   const {
     totalPrice,
@@ -42,24 +44,36 @@ const Cart = () => {
     if (!isPincodeValid) {
       return;
     }
-    const stripe = await getStripe();
 
-    const response = await fetch("/api/stripe", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(cartItems),
+    const body = JSON.stringify(cartItems);
+    console.log(cartItems);
+    console.log(body);
+
+    Router.push({
+      pathname: "/addresscheckout",
+      query: {
+        body: body,
+      }
     });
+    // const stripe = await getStripe();
 
-    if (response.statusCode === 500) return;
+    // const response = await fetch("/api/stripe", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(cartItems),
+    // });
 
-    const data = await response.json();
-    console.log(data);
+    // if (response.statusCode === 500) return;
 
-    toast.loading("Redirecting...");
+    // const data = await response.json();
+    // console.log(data);
+    // console.log(cartItems);
 
-    stripe.redirectToCheckout({ sessionId: data.id });
+    // toast.loading("Redirecting...");
+
+    // stripe.redirectToCheckout({ sessionId: data.id });
   };
 
   return (
@@ -87,10 +101,18 @@ const Cart = () => {
             onBlur={handlePincodeBlur}
           />
           {!isPincodeValid && (
-            <p className="error">Pincode should be between 560000 and 570000</p>
+            <p className="error">
+              Currently Not delivering to Pincodes outside 560000 and 570000.
+            </p>
+          )}
+          {isPincodeValid && pincode >= 560000 && pincode <= 565555 && (
+            <p className="delivery">Delivery within 2 Days</p>
+          )}
+          {isPincodeValid && pincode >= 565556 && pincode <= 570000 && (
+            <p className="delivery">Delivery within 5 Days</p>
           )}
         </div>
-
+        {/* <p className="error">Nice</p> */}
         {cartItems.length < 1 && (
           <div className="empty-cart">
             <AiOutlineShopping size={150} />
@@ -111,7 +133,7 @@ const Cart = () => {
           {cartItems.length >= 1 &&
             cartItems.map((item) => (
               <div className="product" key={item._id}>
-                {console.log(item._id)}
+                {/* {console.log(item._id)} */}
                 <img
                   src={urlFor(item?.image[0])}
                   className="cart-product-image"
