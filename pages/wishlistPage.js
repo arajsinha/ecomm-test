@@ -3,8 +3,15 @@ import Link from "next/link";
 import { client, urlFor } from "../lib/client";
 
 const WishlistPage = () => {
-  // Retrieve the wishlist data from localStorage
-  const wishlistData = JSON.parse(localStorage.getItem("wishlist"));
+  let wishlistData;
+
+  try {
+    // Retrieve the wishlist data from localStorage
+    wishlistData = JSON.parse(localStorage.getItem("wishlist"));
+  } catch (error) {
+    console.error("Error accessing localStorage:", error);
+    wishlistData = null;
+  }
 
   return (
     <div className="wishlist-container">
@@ -31,7 +38,7 @@ const WishlistPage = () => {
           ))}
         </div>
       ) : (
-        <p>Your wishlist is empty.</p>
+        <p>{wishlistData ? "Your wishlist is empty." : "Failed to access wishlist data."}</p>
       )}
     </div>
   );
