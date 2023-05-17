@@ -1,6 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import { handleData } from "./datahandler";
 import { client } from "../lib/client";
 import { Product, FooterBanner, HeroBanner } from "../components";
 import Widget from "../components/Widget";
@@ -11,70 +11,70 @@ import FooterMain from "../components/FooterMain";
 import Category from "../components/Category";
 import Link from "next/link";
 
-const Home = ({ products, bannerData }) => (
-  <div>
-    {/* {console.log(products)} */}
-    {/* <HeroBanner heroBanner={bannerData.length && bannerData[0]}  /> */}
-    <HeroImageBanner heroBanner={bannerData.length && bannerData[0]} />
-    <HappyStrip />
-    {/* <Widget /> */}
-    <div className="collection-products ">
-      <div className="products-heading">
-        <h2>Shop Our Collection</h2>
-        {/* <p>We have some amazing products</p> */}
-      </div>
-
-      <div className="products-container">
-        {products?.slice(0, 6).map((product, index) => {
-          {
-            /* {console.log(product._id)} */
-          }
-          return <Product key={product._id} product={product} />;
-        })}
-      </div>
-      <Link href="/categorypages/allProducts">
-        <div className="all-flash-sale">
-          <button className="view-collection">View All</button>
+const Home = ({ products, bannerData }) => {
+  const productArray = products;
+  handleData(productArray);
+  console.log(productArray);
+  return (
+    <div>
+      <HeroImageBanner heroBanner={bannerData.length && bannerData[0]} />
+      <HappyStrip />
+      {/* <Widget /> */}
+      <div className="collection-products ">
+        <div className="products-heading">
+          <h2>Shop Our Collection</h2>
+          {/* <p>We have some amazing products</p> */}
         </div>
-      </Link>
-    </div>
-    <hr />
 
-    <div className="products-heading category-heading">
-      <h2>Shop By Categories</h2>
-    </div>
-    <div className="products-container category-container">
-      <Category />
-    </div>
+        <div className="products-container">
+          {products?.slice(0, 6).map((product, index) => {
+            {
+              console.log(product.name);
+            }
 
-    <div className="flash-sale">
-      <div className="products-heading flash-sale-heading">
-        <h2>Flash Sale</h2>
-      </div>
-      <div className="products-container flash-sale-container">
-        {products?.slice(0, 6).map((product, index) => {
-          //var count = 0;
-          //if (products[index]["sale"] == "yes" && count < 6) {
-          {
-            /* console.log(index); */
-          }
-          //count++;
-          return <Product key={product._id} product={product} />;
-          //}
-        })}
-      </div>
-      <Link href="/categorypages/flashSale">
-        <div className="all-flash-sale">
-          <button>View All</button>
+            return <Product key={product._id} product={product} />;
+          })}
         </div>
-      </Link>
-    </div>
+        <Link href="/categorypages/allProducts">
+          <div className="all-flash-sale">
+            <button className="view-collection">View All</button>
+          </div>
+        </Link>
+      </div>
+      <hr />
 
-    <Info />
-    {/* <FooterBanner footerBanner={bannerData && bannerData[0]} /> */}
-    <FooterMain />
-  </div>
-);
+      <div className="products-heading category-heading">
+        <h2>Shop By Categories</h2>
+      </div>
+      <div className="products-container category-container">
+        <Category />
+      </div>
+
+      <div className="flash-sale">
+        <div className="products-heading flash-sale-heading">
+          <h2>Flash Sale</h2>
+        </div>
+        <div className="products-container flash-sale-container">
+          {products?.slice(0, 6).map((product, index) => {
+            return <Product key={product._id} product={product} />;
+          })}
+        </div>
+        <Link href="/categorypages/flashSale">
+          <div className="all-flash-sale">
+            <button>View All</button>
+          </div>
+        </Link>
+      </div>
+
+      <div id="info">
+        <Info />
+      </div>
+
+      {/* <FooterBanner footerBanner={bannerData && bannerData[0]} /> */}
+      <FooterMain />
+    </div>
+  );
+};
 
 export const getServerSideProps = async () => {
   const query = '*[_type == "product"]';

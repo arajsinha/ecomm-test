@@ -15,7 +15,7 @@ import { urlFor } from "../lib/client";
 import getStripe from "../lib/getStripe";
 
 const Cart = () => {
-  const router = useRouter()
+  const router = useRouter();
   const cartRef = useRef();
   const {
     totalPrice,
@@ -44,16 +44,16 @@ const Cart = () => {
     if (!isPincodeValid) {
       return;
     }
-
+    setShowCart(false);
     const body = JSON.stringify(cartItems);
-    console.log(cartItems);
-    console.log(body);
+    // console.log(cartItems);
+    // console.log(body);
 
     Router.push({
       pathname: "/addresscheckout",
       query: {
         body: body,
-      }
+      },
     });
     // const stripe = await getStripe();
 
@@ -77,7 +77,7 @@ const Cart = () => {
   };
 
   return (
-    <div className="cart-wrapper" ref={cartRef}>
+    <div className="cart-wrapper" ref={cartRef} style={{ height: "100vh" }}>
       <div className="cart-container">
         <button
           type="button"
@@ -129,7 +129,7 @@ const Cart = () => {
           </div>
         )}
 
-        <div className="product-container">
+        <div className="product-container" style={{overflowY:"auto", paddingBottom: "10rem"}}>
           {cartItems.length >= 1 &&
             cartItems.map((item) => (
               <div className="product" key={item._id}>
@@ -180,7 +180,7 @@ const Cart = () => {
             ))}
         </div>
         {cartItems.length >= 1 && (
-          <div className="cart-bottom">
+          <div className="cart-bottom" >
             <div className="total">
               <h3>Subtotal:</h3>
               <h3>₹{totalPrice}</h3>

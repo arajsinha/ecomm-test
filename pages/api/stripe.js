@@ -10,6 +10,9 @@ export default async function handler(req, res) {
       const params = {
         submit_type: "pay",
         mode: "payment",
+        phone_number_collection: {
+          enabled: true,
+        },
         // payment_method_types: ['card'],
         // billing_address_collection: 'auto',
         // shipping_address_collection: {allowed_countries: ['IN']},
@@ -45,7 +48,8 @@ export default async function handler(req, res) {
         metadata: {
           user_uid: req.headers.useruid,
           billingaddress: req.headers.billingaddress,
-          shippingaddress: req.headers.shippingaddress
+          shippingaddress: req.headers.shippingaddress,
+          productdetails: req.headers.productdetails
         }
       };
 

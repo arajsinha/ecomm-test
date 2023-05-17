@@ -7,35 +7,55 @@ import toast from "react-hot-toast";
 
 import firebaseConfig from "../lib/firebase";
 import { initializeApp } from "firebase/app";
-import { getAuth, updateProfile, signOut, updateEmail } from "firebase/auth";
+import {
+  getAuth,
+  updateProfile,
+  signOut,
+  updateEmail,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 const firebase = initializeApp(firebaseConfig);
 const auth = getAuth(firebase);
 
 let uid;
 
-const getUID = auth.onAuthStateChanged((user) => {
-  if (user) {
-    // User is signed in, see docs for a list of available properties
-    // https://firebase.google.com/docs/reference/js/firebase.User
-    uid = user.uid;
-    // ...
-  } else {
-    // User is signed out
-    // ...
-    console.log("Not signed in")
-  }
-});
-
 export default function AddressCollection() {
   const router = useRouter();
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      uid = user.uid;
+    } else {
+      router.push("/loginmobile?reload=false");
+    }
+  });
 
   const handleCheckout = async () => {
     const query = router.query.body;
     const billing_address = JSON.stringify(billingAddress);
     const shipping_address = JSON.stringify(shippingAddress);
-    const full_data = query + billing_address + shipping_address;
     const stripe = await getStripe();
+    let productDetails;
+
+    const cartData = () => {
+      const cartItems = JSON.parse(query);
+      const itemDetails = cartItems.map((item, index) => ({
+        index: index,
+        name: item.name,
+        original: item.original,
+        price: item.price,
+        quantity: item.quantity,
+        slug: item.slug.current,
+      }));
+
+      // itemDetails.forEach((item) => {
+      //   console.log(item);
+      // });
+      productDetails = JSON.stringify(itemDetails);
+    };
+
+    cartData();
 
     const response = await fetch("/api/stripe", {
       method: "POST",
@@ -43,6 +63,7 @@ export default function AddressCollection() {
         "Content-Type": "application/json",
         billingaddress: billing_address,
         shippingaddress: shipping_address,
+        productdetails: productDetails,
         useruid: uid,
       },
       body: query,
@@ -52,31 +73,31 @@ export default function AddressCollection() {
 
     const data = await response.json();
     // console.log(data);
-    // console.log(cartItems);
+    // console.log(JSON.parse(query));
 
     toast.loading("Redirecting...");
-
+    // console.log(uid);
     stripe.redirectToCheckout({ sessionId: data.id });
   };
 
   const [billingAddress, setBillingAddress] = useState({
-    name: "",
-    country: "India",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    pincode: "",
-    state: "Karnataka",
+    billingName: "",
+    billingCountry: "India",
+    billingAddressLine1: "",
+    billingAddressLine2: "",
+    billingCity: "",
+    billingPincode: "",
+    billingState: "Karnataka",
   });
 
   const [shippingAddress, setShippingAddress] = useState({
-    name: "",
-    country: "India",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    pincode: "",
-    state: "Karnataka",
+    shippingName: "",
+    shippingCountry: "India",
+    shippingAddressLine1: "",
+    shippingAddressLine2: "",
+    shippingCity: "",
+    shippingPincode: "",
+    shippingState: "Karnataka",
   });
 
   const [isPincodeValid, setIsPincodeValid] = useState(false);
@@ -89,11 +110,11 @@ export default function AddressCollection() {
     checkPincodeValidity(pincode);
     setBillingAddress((prevAddress) => ({
       ...prevAddress,
-      pincode: pincode,
+      billingPincode: sameAddress ? pincode : prevAddress.billingPincode,
     }));
     setShippingAddress((prevAddress) => ({
       ...prevAddress,
-      pincode: pincode,
+      shippingPincode: pincode,
     }));
   };
 
@@ -111,39 +132,67 @@ export default function AddressCollection() {
     if (addressType === "billing") {
       setBillingAddress((prevAddress) => ({
         ...prevAddress,
-        [name]: value,
+        billingName: name === "name" ? value : prevAddress.billingName,
+        billingAddressLine1:
+          name === "addressLine1" ? value : prevAddress.billingAddressLine1,
+        billingAddressLine2:
+          name === "addressLine2" ? value : prevAddress.billingAddressLine2,
+        billingCity: name === "city" ? value : prevAddress.billingCity,
+        billingPincode: name === "pincode" ? value : prevAddress.billingPincode,
       }));
 
       if (sameAddress) {
         setShippingAddress((prevAddress) => ({
           ...prevAddress,
-          [name]: value,
+          shippingName: name === "name" ? value : prevAddress.shippingName,
+          shippingAddressLine1:
+            name === "addressLine1" ? value : prevAddress.shippingAddressLine1,
+          shippingAddressLine2:
+            name === "addressLine2" ? value : prevAddress.shippingAddressLine2,
+          shippingCity: name === "city" ? value : prevAddress.shippingCity,
         }));
       }
     } else if (addressType === "shipping") {
       setShippingAddress((prevAddress) => ({
         ...prevAddress,
-        [name]: value,
+        shippingName: name === "name" ? value : prevAddress.shippingName,
+        shippingAddressLine1:
+          name === "addressLine1" ? value : prevAddress.shippingAddressLine1,
+        shippingAddressLine2:
+          name === "addressLine2" ? value : prevAddress.shippingAddressLine2,
+        shippingCity: name === "city" ? value : prevAddress.shippingCity,
       }));
     }
   };
 
   const handleSameAddressChange = (event) => {
-    setSameAddress(event.target.checked);
+    const { checked } = event.target;
+    setSameAddress(checked);
 
-    if (event.target.checked) {
-      setShippingAddress(billingAddress);
-      // billingAddress = shippingAddress;
+    if (checked) {
+      const sharedPincode = shippingAddress.shippingPincode;
+
+      setBillingAddress((prevAddress) => ({
+        ...prevAddress,
+        billingPincode: sharedPincode,
+      }));
+      setShippingAddress((prevAddress) => ({
+        ...prevAddress,
+        shippingPincode: sharedPincode,
+      }));
+    } else {
+      setBillingAddress((prevAddress) => ({
+        ...prevAddress,
+        billingPincode: "",
+      }));
     }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    getUID();
-
-    console.log("Billing Address:", billingAddress);
-    console.log("Shipping Address:", shippingAddress);
+    // console.log("Billing Address:", billingAddress);
+    // console.log("Shipping Address:", shippingAddress);
     // Here, you can perform any further processing or API calls with the addresses
   };
 
@@ -180,7 +229,7 @@ export default function AddressCollection() {
               type="text"
               name="name"
               required
-              value={billingAddress.name}
+              value={billingAddress.billingName}
               onChange={(event) => handleChange(event, "billing")}
             />
             <br />
@@ -190,7 +239,7 @@ export default function AddressCollection() {
               required
               type="text"
               name="addressLine1"
-              value={billingAddress.addressLine1}
+              value={billingAddress.billingAddressLine1}
               onChange={(event) => handleChange(event, "billing")}
             />
             <br />
@@ -199,7 +248,7 @@ export default function AddressCollection() {
             <input
               type="text"
               name="addressLine2"
-              value={billingAddress.addressLine2}
+              value={billingAddress.billingAddressLine2}
               onChange={(event) => handleChange(event, "billing")}
             />
             <br />
@@ -209,7 +258,7 @@ export default function AddressCollection() {
               type="text"
               required
               name="city"
-              value={billingAddress.city}
+              value={billingAddress.billingCity}
               onChange={(event) => handleChange(event, "billing")}
             />
             <br />
@@ -218,8 +267,9 @@ export default function AddressCollection() {
             <input
               type="text"
               name="pincode"
-              value={billingAddress.pincode}
-              disabled
+              value={billingAddress.billingPincode}
+              onChange={(event) => handleChange(event, "billing")}
+              disabled={sameAddress} // Correctly bind the disabled attribute
             />
             <br />
             <label>State:</label>
@@ -227,7 +277,7 @@ export default function AddressCollection() {
             <input
               type="text"
               name="state"
-              value={billingAddress.state}
+              value={billingAddress.billingState}
               disabled
             />
             <br />
@@ -240,7 +290,7 @@ export default function AddressCollection() {
                   required
                   type="text"
                   name="name"
-                  value={shippingAddress.name}
+                  value={shippingAddress.shippingName}
                   onChange={(event) => handleChange(event, "shipping")}
                 />
                 <br />
@@ -250,7 +300,7 @@ export default function AddressCollection() {
                   required
                   type="text"
                   name="addressLine1"
-                  value={shippingAddress.addressLine1}
+                  value={shippingAddress.shippingAddressLine1}
                   onChange={(event) => handleChange(event, "shipping")}
                 />
                 <br />
@@ -259,7 +309,7 @@ export default function AddressCollection() {
                 <input
                   type="text"
                   name="addressLine2"
-                  value={shippingAddress.addressLine2}
+                  value={shippingAddress.shippingAddressLine2}
                   onChange={(event) => handleChange(event, "shipping")}
                 />
                 <br />
@@ -269,7 +319,7 @@ export default function AddressCollection() {
                   type="text"
                   required
                   name="city"
-                  value={shippingAddress.city}
+                  value={shippingAddress.shippingCity}
                   onChange={(event) => handleChange(event, "shipping")}
                 />
                 <br />
@@ -278,7 +328,8 @@ export default function AddressCollection() {
                 <input
                   type="text"
                   name="pincode"
-                  value={shippingAddress.pincode}
+                  value={shippingAddress.shippingPincode}
+                  onChange={(event) => handleChange(event, "shipping")}
                   disabled
                 />
                 <br />
@@ -287,7 +338,7 @@ export default function AddressCollection() {
                 <input
                   type="text"
                   name="state"
-                  value={shippingAddress.state}
+                  value={shippingAddress.shippingState}
                   disabled
                 />
                 <br />

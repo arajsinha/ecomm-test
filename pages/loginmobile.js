@@ -9,6 +9,7 @@ import {
   getAuth,
   signInWithPhoneNumber,
   RecaptchaVerifier,
+  onAuthStateChanged,
 } from "firebase/auth";
 import firebaseConfig from "../lib/firebase";
 import { initializeApp } from "firebase/app";
@@ -50,8 +51,26 @@ function reloadHash() {
 export default function PhoneInputGfg() {
   const router = useRouter();
   const [phone, setPhone] = useState("");
+  const [code, setCode] = useState("");
   const [isVerified, setIsVerified] = useState(false);
   const [otp, setOtp] = useState("");
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // alert(user.email);
+      router.push("/profile");
+      // const displayName = user.displayName;
+      // const email = user.email;
+      // const photoURL = user.photoURL;
+      // const emailVerified = user.emailVerified;
+      // console.log(displayName, email, photoURL, emailVerified);
+      //   return <div>Hi</div>;
+      // ...
+    } else {
+      // User is not signed in.
+      // ...
+    }
+  });
 
   reload = router.query.reload;
   useEffect(() => {
@@ -131,6 +150,7 @@ export default function PhoneInputGfg() {
             onChange={(phone) => setPhone(phone)}
             required
             minLength={10}
+            disableCountryChange={true}
           />
           <br />
           <br />
@@ -199,17 +219,6 @@ export default function PhoneInputGfg() {
           )}
         </div>
       </div>
-      <Link href="/signup">
-        <a
-          style={{
-            textAlign: "center",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          Not an Existing User? Sign Up
-        </a>
-      </Link>
     </div>
   );
 }

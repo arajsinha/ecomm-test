@@ -1,12 +1,12 @@
-import React from 'react';
-import Head from 'next/head';
+import React from "react";
+import Head from "next/head";
+import { client } from "../lib/client";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import BootstrapNavbar from "./NavbarBootstrap";
+import FooterMain from "./FooterMain";
 
-import Navbar from './Navbar';
-import Footer from './Footer';
-import BootstrapNavbar from './NavbarBootstrap';
-import FooterMain from './FooterMain';
-
-const Layout = ({ children }) => {
+const Layout = ({ children, products }) => {
   return (
     <div className="layout">
       <Head>
@@ -14,17 +14,16 @@ const Layout = ({ children }) => {
       </Head>
       <header>
         <Navbar />
+
         {/* <BootstrapNavbar/> */}
       </header>
-      <main className="main-container">
-        {children}
-      </main>
+      <main className="main-container">{children}</main>
       <footer>
         {/* <FooterMain/> */}
         <Footer />
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

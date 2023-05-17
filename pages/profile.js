@@ -28,8 +28,13 @@ const Profile = () => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);
       //   localStorage.setItem("userLogin", user.email)
-      useremail = user.email;
-      setDisplayName(user?.displayName || "");
+      try {
+        useremail = user.email;
+        console.log(user.uid);
+        setDisplayName(user?.displayName || "");
+      } catch (err) {
+        console.log(user.uid);
+      }
     });
 
     return unsubscribe;
@@ -78,7 +83,7 @@ const Profile = () => {
       })
       .catch((error) => {
         console.log(error);
-        alert(error)
+        alert(error);
       });
   };
 

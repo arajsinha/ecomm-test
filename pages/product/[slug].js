@@ -5,6 +5,7 @@ import {
   AiFillStar,
   AiOutlineStar,
 } from "react-icons/ai";
+import { FiHeart } from "react-icons/fi";
 
 import { client, urlFor } from "../../lib/client";
 import { Product } from "../../components";
@@ -16,6 +17,45 @@ const ProductDetails = ({ product, products }) => {
   const [index, setIndex] = useState(0);
   const { decQty, incQty, qty, onAdd, setShowCart } = useStateContext();
   const [selectedSize, setSelectedSize] = useState("");
+  const [wishlistStatus, setWishlistStatus] = useState(false);
+
+  const handleAddToWishlist = () => {
+    const wishlistItem = {
+      name: product.name,
+      slug: product.slug.current,
+      price: product.price,
+      image: product.image
+    };
+
+    // Get the existing wishlist items from localStorage
+    const existingWishlist = localStorage.getItem("wishlist");
+
+    // Parse the existing wishlist items or initialize an empty array
+    const wishlist = existingWishlist ? JSON.parse(existingWishlist) : [];
+
+    // Check if the item already exists in the wishlist
+    const isItemInWishlist = wishlist.some(
+      (item) => item.slug === wishlistItem.slug
+    );
+
+    if (isItemInWishlist) {
+      // Item already exists in the wishlist, handle accordingly (e.g., show a message)
+      console.log("Item already exists in the wishlist");
+      return;
+    }
+
+    // Add the new item to the wishlist array
+    wishlist.push(wishlistItem);
+
+    // Log the data that goes into the wishlist
+    console.log("Item added to wishlist:", wishlistItem);
+
+    // Store the updated wishlist in localStorage
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+
+    // Update the wishlist status in the component's state
+    setWishlistStatus(true);
+  };
 
   function handleSizeSelection(size) {
     setSelectedSize(size);
@@ -106,6 +146,30 @@ const ProductDetails = ({ product, products }) => {
               Buy Now
             </button>
           </div>
+          <div className="buttons">
+            {wishlistStatus ? (
+              <button
+                type="button"
+                className="buy-now"
+                style={{ backgroundColor: "red", color: "white" }}
+              >
+                Added to Wishlist <FiHeart />
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="buy-now"
+                style={{
+                  backgroundColor: "transparent",
+                  color: "red",
+                  border: "1px solid red",
+                }}
+                onClick={handleAddToWishlist}
+              >
+                Add to Wishlist <FiHeart />
+              </button>
+            )}
+          </div>
           <br />
           {mattressOptions && (
             <div className="variantHolder">
@@ -159,7 +223,13 @@ const ProductDetails = ({ product, products }) => {
               <br />
               <h3>Height</h3>
               <br />
-              <div style={{ display: "flex", flexWrap: "wrap", textAlign: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  textAlign: "center",
+                }}
+              >
                 {height.map((option) => (
                   <div
                     key={option._key}
@@ -187,9 +257,12 @@ const ProductDetails = ({ product, products }) => {
         <h2>You may also like</h2>
         <div className="marquee">
           <div className="maylike-products-container track">
-            {products.map((item) => (
-              <Product key={item._id} product={item} />
-            ))}
+            {products.map((item) => {
+              if (item.category === "accessories") {
+                return <Product key={item._id} product={item} />;
+              }
+              return null;
+            })}
           </div>
         </div>
       </div>
