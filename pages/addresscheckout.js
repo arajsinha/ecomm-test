@@ -23,13 +23,15 @@ let uid;
 export default function AddressCollection() {
   const router = useRouter();
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      uid = user.uid;
-    } else {
-      router.push("/loginmobile?reload=false");
-    }
-  });
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        uid = user.uid;
+      } else {
+        router.push("/loginmobile?reload=false");
+      }
+    });
+  }, []);
 
   const handleCheckout = async () => {
     const query = router.query.body;
