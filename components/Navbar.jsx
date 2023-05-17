@@ -8,7 +8,7 @@ import { Cart } from "./";
 import { useStateContext } from "../context/StateContext";
 import { useRouter } from "next/router";
 import "bootstrap/dist/css/bootstrap.css";
-import handleData, { getData } from "../pages/datahandler";
+import handleData, { getData } from "../components/dataHandler";
 
 import firebaseConfig from "../lib/firebase";
 import { initializeApp } from "firebase/app";

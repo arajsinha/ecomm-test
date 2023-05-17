@@ -1,6 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { handleData } from "./datahandler";
+import { handleData } from "../components/dataHandler";
 import { client } from "../lib/client";
 import { Product, FooterBanner, HeroBanner } from "../components";
 import Widget from "../components/Widget";
