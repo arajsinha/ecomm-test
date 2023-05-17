@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Router, { useRouter } from "next/router";
 import { useStateContext } from "../context/StateContext";
 import { urlFor } from "../lib/client";
