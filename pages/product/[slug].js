@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AiOutlineMinus,
   AiOutlinePlus,
@@ -11,6 +11,17 @@ import { client, urlFor } from "../../lib/client";
 import { Product } from "../../components";
 import { useStateContext } from "../../context/StateContext";
 
+import firebaseConfig from "../../lib/firebase";
+import { initializeApp } from "firebase/app";
+const firebase = initializeApp(firebaseConfig);
+const auth = getAuth(firebase);
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+} from "firebase/auth";
+
 const ProductDetails = ({ product, products }) => {
   const { image, name, details, price, original, mattressOptions, height } =
     product;
@@ -18,14 +29,74 @@ const ProductDetails = ({ product, products }) => {
   const { decQty, incQty, qty, onAdd, setShowCart } = useStateContext();
   const [selectedSize, setSelectedSize] = useState("");
   const [wishlistStatus, setWishlistStatus] = useState(false);
+  const [isLoggedInUser, setIsLoggedInUser] = useState(false);
+
+  useEffect(() => {
+    // Fire 'view_item' event on page load
+    const itemData = {
+      item_name: product.name,
+      item_slug: product.slug.current,
+      item_price: product.price,
+      // Add any other relevant item attributes
+    };
+    window.dataLayer.push({
+      event: "view_item",
+      ecommerce: {
+        items: [itemData],
+      },
+    });
+  }, [product]);
+
+  const checkLoggedInUser = () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedInUser(true);
+      } else {
+        setIsLoggedInUser(false);
+      }
+    });
+  };
+
+  const handleAddToCart = () => {
+    // Fire 'add_to_cart' event when item is added to the cart
+    let login;
+    checkLoggedInUser();
+    if (isLoggedInUser) {
+      login = "loggedIn";
+    } else {
+      login = "notLoggedIn";
+    }
+    const itemData = {
+      item_name: product.name,
+      item_slug: product.slug.current,
+      item_price: product.price,
+      // Add any other relevant item attributes
+    };
+    window.dataLayer.push({
+      event: "add_to_cart",
+      user_logged_in: login,
+      ecommerce: {
+        currency: "INR", // Replace with your currency code
+        value: price * qty, // Replace with the total value of the added item(s)
+        items: [itemData],
+      },
+    });
+  };
 
   const handleAddToWishlist = () => {
     const wishlistItem = {
       name: product.name,
       slug: product.slug.current,
       price: product.price,
-      image: product.image
+      image: product.image,
     };
+
+    window.dataLayer.push({
+      event: "add_to_wishlist",
+      ecommerce: {
+        items: [wishlistItem],
+      },
+    });
 
     // Get the existing wishlist items from localStorage
     const existingWishlist = localStorage.getItem("wishlist");
@@ -64,7 +135,10 @@ const ProductDetails = ({ product, products }) => {
   const handleBuyNow = () => {
     onAdd(product, qty);
 
+    handleAddToCart();
+
     setShowCart(true);
+
   };
 
   function calcDiscount(original, price) {
@@ -138,7 +212,10 @@ const ProductDetails = ({ product, products }) => {
             <button
               type="button"
               className="add-to-cart"
-              onClick={() => onAdd(product, qty)}
+              onClick={() => {
+                onAdd(product, qty);
+                handleAddToCart();
+              }}
             >
               Add to Cart
             </button>
