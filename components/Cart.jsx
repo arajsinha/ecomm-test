@@ -40,10 +40,35 @@ const Cart = () => {
     }
   };
 
+  // if (cartItems.length >= 1) {
+  //   cartItems.forEach((item, index) => {
+  //     console.log("CartItem", index, ":", item);
+  //   });
+  // }
+
   const handleCheckout = async () => {
     if (!isPincodeValid) {
       return;
     }
+
+    // Push the begin_checkout event to the dataLayer
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "begin_checkout",
+      ecommerce: {
+        checkout: {
+          actionField: { step: 1, option: "Pay With Stripe" },
+          products: cartItems.map((item) => ({
+            item_category: item.category,
+            item_name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            slug: item.slug.current
+          })),
+        },
+      },
+    });
+
     setShowCart(false);
     const body = JSON.stringify(cartItems);
     // console.log(cartItems);
@@ -129,7 +154,10 @@ const Cart = () => {
           </div>
         )}
 
-        <div className="product-container" style={{overflowY:"auto", paddingBottom: "10rem"}}>
+        <div
+          className="product-container"
+          style={{ overflowY: "auto", paddingBottom: "10rem" }}
+        >
           {cartItems.length >= 1 &&
             cartItems.map((item) => (
               <div className="product" key={item._id}>
@@ -180,7 +208,7 @@ const Cart = () => {
             ))}
         </div>
         {cartItems.length >= 1 && (
-          <div className="cart-bottom" >
+          <div className="cart-bottom">
             <div className="total">
               <h3>Subtotal:</h3>
               <h3>₹{totalPrice}</h3>

@@ -33,6 +33,17 @@ export default function AddressCollection() {
     });
   }, []);
 
+  const pushDataLayer = () => {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "add_shipping_info",
+      ecommerce: {
+        billingaddress: billingAddress,
+        shippingaddress: shippingAddress,
+      },
+    });
+  };
+
   const handleCheckout = async () => {
     const query = router.query.body;
     const billing_address = JSON.stringify(billingAddress);
@@ -40,9 +51,11 @@ export default function AddressCollection() {
     const stripe = await getStripe();
     let productDetails;
 
+    let itemDetails;
+
     const cartData = () => {
       const cartItems = JSON.parse(query);
-      const itemDetails = cartItems.map((item, index) => ({
+      itemDetails = cartItems.map((item, index) => ({
         index: index,
         name: item.name,
         original: item.original,
@@ -58,7 +71,7 @@ export default function AddressCollection() {
     };
 
     cartData();
-
+    pushDataLayer();
     const response = await fetch("/api/stripe", {
       method: "POST",
       headers: {

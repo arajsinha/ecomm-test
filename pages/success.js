@@ -11,6 +11,8 @@ const Success = () => {
   const [session_id, setSessionId] = useState("");
   const { setCartItems, setTotalPrice, setTotalQuantities } = useStateContext();
 
+  let txnDetails;
+
   const getSessionData = async () => {
     if (session_id && session_id !== "") {
       const response = await fetch(
@@ -27,51 +29,76 @@ const Success = () => {
       const data = await response.json();
       const fieldList = {};
 
+      const productDataLayer = JSON.parse(data.metadata.productdetails)
+      const billingAddress = JSON.parse(data.metadata.billingaddress)
+      const shippingAddress = JSON.parse(data.metadata.shippingaddress)
+      const user_uid = data.metadata.user_uid
+      const shipping_amount = data.shipping_options[0].shipping_amount
+      console.log(data)
       const metadataFields = {}; // Object to store the nested key-value pairs
 
-      Object.entries(data).forEach(([key, value]) => {
-        if (
-          key === "amount_subtotal" ||
-          key === "amount_total" ||
-          key === "metadata" ||
-          key === "id" ||
-          key === "customer_details"
-        ) {
-          fieldList[key] = value;
-        }
-        if (key === "metadata") {
-          console.log("Metadata Key:", key);
-          const processMetadata = (metadataObj, parentKey = "") => {
-            Object.entries(metadataObj).forEach(([nestedKey, nestedValue]) => {
-              const fullKey = parentKey
-                ? `${parentKey}.${nestedKey}`
-                : nestedKey;
-              if (typeof nestedValue === "object") {
-                processMetadata(nestedValue, fullKey); // Recursively process nested objects
-              } else {
-                metadataFields[fullKey] = nestedValue; // Store the key-value pair
-              }
-            });
-          };
+      // Object.entries(data).forEach(([key, value]) => {
+      //   if (
+      //     key === "amount_subtotal" ||
+      //     key === "amount_total" ||
+      //     key === "metadata" ||
+      //     key === "id" ||
+      //     key === "customer_details"
+      //   ) {
+      //     fieldList[key] = value;
+      //   }
+      //   if (key === "metadata") {
+      //     console.log("Metadata Key:", key);
+      //     const processMetadata = (metadataObj, parentKey = "") => {
+      //       Object.entries(metadataObj).forEach(([nestedKey, nestedValue]) => {
+      //         const fullKey = parentKey
+      //           ? `${parentKey}.${nestedKey}`
+      //           : nestedKey;
+      //         if (typeof nestedValue === "object") {
+      //           processMetadata(nestedValue, fullKey); // Recursively process nested objects
+      //         } else {
+      //           metadataFields[fullKey] = nestedValue; // Store the key-value pair
+      //         }
+      //       });
+      //     };
 
-          const metadataValues = Object.values(value);
-          metadataValues.forEach((metadataValue) => {
-            try {
-              const parsedValue = JSON.parse(metadataValue);
-              if (typeof parsedValue === "object") {
-                processMetadata(parsedValue);
-              } else {
-                console.log("Metadata Value:", parsedValue);
-              }
-            } catch (err) {
-              console.log("Metadata Value:", metadataValue);
-            }
-          });
-        }
+      //     const metadataValues = Object.values(value);
+      //     metadataValues.forEach((metadataValue) => {
+      //       try {
+      //         const parsedValue = JSON.parse(metadataValue);
+      //         if (typeof parsedValue === "object") {
+      //           processMetadata(parsedValue);
+      //         } else {
+      //           console.log("Metadata Value:", parsedValue);
+      //         }
+      //       } catch (err) {
+      //         console.log("Metadata Value:", metadataValue);
+      //       }
+      //     });
+      //   }
+      // });
+
+      // console.log("Metadata Fields:", metadataFields); // Log the stored key-value pairs
+      txnDetails = metadataFields;
+      // console.log(productDataLayer)
+      // Fire 'purchase' event
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "purchase",
+        ecommerce: {
+          purchase: {
+            actionField: {
+              order_id: data.id,
+              user_id: user_uid,
+              value: data.amount_total/100,
+              shipping: shipping_amount,
+              tax: data.total_details.amount_tax
+            },
+            products: productDataLayer
+          },
+        },
       });
-
-      console.log("Metadata Fields:", metadataFields); // Log the stored key-value pairs
-
+      // console.log(txnDetails)
       // console.log("Field List:", fieldList);
 
       // console.log(data);
