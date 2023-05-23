@@ -6,9 +6,17 @@ import getStripe from "../lib/getStripe";
 import firebaseConfig from "../lib/firebase";
 import { initializeApp } from "firebase/app";
 import { getAuth, updateProfile, signOut, updateEmail } from "firebase/auth";
+import {
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  getFirestore,
+} from "firebase/firestore";
 
 const firebase = initializeApp(firebaseConfig);
 const auth = getAuth(firebase);
+const firestore = getFirestore(firebase);
 
 import { useEffect, useState } from "react";
 
@@ -30,7 +38,8 @@ const Profile = () => {
       //   localStorage.setItem("userLogin", user.email)
       try {
         useremail = user.email;
-        console.log(user.uid);
+        // console.log(user.uid);
+        // console.log(user.phoneNumber);
         setDisplayName(user?.displayName || "");
       } catch (err) {
         console.log(user.uid);
@@ -39,6 +48,27 @@ const Profile = () => {
 
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (user) {
+        const userDocRef = doc(firestore, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          if (!displayName && userData.name) {
+            setDisplayName(userData.name);
+          }
+          if (!newEmail && userData.email) {
+            setNewEmail(userData.email);
+          }
+        }
+      }
+    };
+
+    loadUserData();
+  }, [user, displayName, newEmail]);
 
   const handleEditClick = () => {
     setShowInput(true);
@@ -52,7 +82,7 @@ const Profile = () => {
     signOut(auth)
       .then(() => {
         alert("Sign-out successful");
-        router.push("/login");
+        router.push("/loginmobile?reload=false");
       })
       .catch((error) => {
         // An error happened.
@@ -60,31 +90,41 @@ const Profile = () => {
       });
   };
 
-  const handleSaveClick = () => {
-    const currentUser = auth.currentUser;
-    updateProfile(auth.currentUser, {
-      displayName: newDisplayName,
-    })
-      .then(() => {
-        setDisplayName(newDisplayName);
-        setShowInput(false);
-      })
-      .catch((error) => {
+  const handleSaveClick = async () => {
+    if (newDisplayName) {
+      const currentUser = auth.currentUser;
+      await updateProfile(auth.currentUser, {
+        displayName: newDisplayName,
+      }).catch((error) => {
         console.log(error);
       });
+      setDisplayName(newDisplayName);
+
+      if (user) {
+        const userDocRef = doc(firestore, "users", user.uid);
+        await setDoc(userDocRef, { name: newDisplayName }, { merge: true });
+      }
+    }
+
+    setShowInput(false);
   };
 
-  const handleEmailSaveClick = () => {
-    const currentUser = auth.currentUser;
-    updateEmail(auth.currentUser, newEmail)
-      .then(() => {
-        setNewEmail(currentUser.email);
-        setShowEmailInput(false);
-      })
-      .catch((error) => {
+  const handleEmailSaveClick = async () => {
+    if (newEmail) {
+      const currentUser = auth.currentUser;
+      await updateEmail(auth.currentUser, newEmail).catch((error) => {
         console.log(error);
         alert(error);
       });
+      setNewEmail(currentUser.email);
+
+      if (user) {
+        const userDocRef = doc(firestore, "users", user.uid);
+        await setDoc(userDocRef, { email: newEmail }, { merge: true });
+      }
+    }
+
+    setShowEmailInput(false);
   };
 
   if (user === null) {
@@ -195,7 +235,7 @@ const Profile = () => {
       <br />
       <br />
       <div className="my-orders">
-        <Link href={`/order?email=${useremail}&reload=false`}>
+        <Link href={`/order`}>
           <button
             style={{
               border: "none",

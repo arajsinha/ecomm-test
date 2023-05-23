@@ -6,6 +6,16 @@ import { BsBagCheckFill } from "react-icons/bs";
 import { useStateContext } from "../context/StateContext";
 import { runFireworks } from "../lib/utils";
 
+import firebaseConfig from "../lib/firebase";
+import { initializeApp } from "firebase/app";
+import {
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  getFirestore,
+} from "firebase/firestore";
+
 const Success = () => {
   const router = useRouter();
   const [session_id, setSessionId] = useState("");
@@ -29,12 +39,72 @@ const Success = () => {
       const data = await response.json();
       const fieldList = {};
 
-      const productDataLayer = JSON.parse(data.metadata.productdetails)
-      const billingAddress = JSON.parse(data.metadata.billingaddress)
-      const shippingAddress = JSON.parse(data.metadata.shippingaddress)
-      const user_uid = data.metadata.user_uid
-      const shipping_amount = data.shipping_options[0].shipping_amount
-      console.log(data)
+      const productDataLayer = JSON.parse(data.metadata.productdetails);
+      const billingAddress = JSON.parse(data.metadata.billingaddress);
+      const shippingAddress = JSON.parse(data.metadata.shippingaddress);
+      const user_uid = data.metadata.user_uid;
+      const shipping_amount = data.shipping_options[0].shipping_amount;
+      const txn_id = data.id;
+      const total_amount = data.amount_total / 100;
+
+      // Initialize Firebase
+      initializeApp(firebaseConfig);
+
+      // Get a Firestore reference
+      const firestore = getFirestore();
+
+      //Send data to Users collection
+      // Create a Firestore reference to the "users" collection
+      const usersCollection = collection(firestore, "users");
+
+      // Create a Firestore reference to the "allOrders" collection
+      const allOrdersCollection = collection(firestore, "allOrders");
+
+      // Create a reference to the specific user document using the user_uid
+      const userRef = doc(usersCollection, user_uid);
+
+      // Get the user document
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        // Get the existing orders from the user document
+        const existingOrders = userDoc.data().orders || [];
+
+        // Check if the txn_id already exists in the existing orders
+        const txnExists = existingOrders.some(
+          (order) => order.txn_id === txn_id
+        );
+
+        if (!txnExists) {
+          // Create a new order object
+          const orderData = {
+            productDataLayer,
+            billingAddress,
+            shippingAddress,
+            txn_id,
+            total_amount,
+            purchaseDate: new Date(), // Add the purchase date
+            delivery_status: "Processing", //all statuses - processing, packed, assigned, shipped, delivered
+          };
+
+
+          // Create a reference to the specific order document in the "allOrders" collection using the txn_id
+          const allOrdersRef = doc(allOrdersCollection, txn_id);
+
+          // Set the order document in the "allOrders" collection with the order data
+          await setDoc(allOrdersRef, orderData);
+
+          // Add the new order to the existing orders array
+          const updatedOrders = [...existingOrders, orderData];
+
+          // Update the user document with the updated orders
+          await setDoc(userRef, { orders: updatedOrders }, { merge: true });
+        } else {
+          console.log("txn_id already exists in orders");
+        }
+      }
+
+      console.log(data);
       const metadataFields = {}; // Object to store the nested key-value pairs
 
       // Object.entries(data).forEach(([key, value]) => {
@@ -90,11 +160,11 @@ const Success = () => {
             actionField: {
               order_id: data.id,
               user_id: user_uid,
-              value: data.amount_total/100,
+              value: data.amount_total / 100,
               shipping: shipping_amount,
-              tax: data.total_details.amount_tax
+              tax: data.total_details.amount_tax,
             },
-            products: productDataLayer
+            products: productDataLayer,
           },
         },
       });

@@ -131,19 +131,20 @@ const Navbar = () => {
                 onClick={handleHoverNavbarClick}
               >
                 <ul>
-                  {testdata.map((product, index) => (
-                    <div key={index}>
-                      <li>
-                        <Link
-                          className="hoverLink"
-                          href={`/products/${product.slug?.current}`}
-                          style={{ color: "black" }}
-                        >
-                          {product.name}
-                        </Link>
-                      </li>
-                    </div>
-                  ))}
+                  {testdata &&
+                    testdata.map((product, index) => (
+                      <div key={index}>
+                        <li>
+                          <Link
+                            className="hoverLink"
+                            href={`/products/${product.slug?.current}`}
+                            style={{ color: "black" }}
+                          >
+                            {product.name}
+                          </Link>
+                        </li>
+                      </div>
+                    ))}
                 </ul>
               </div>
             )}

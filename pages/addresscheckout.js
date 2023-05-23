@@ -102,7 +102,7 @@ export default function AddressCollection() {
     billingAddressLine2: "",
     billingCity: "",
     billingPincode: "",
-    billingState: "Karnataka",
+    billingState: "",
   });
 
   const [shippingAddress, setShippingAddress] = useState({
@@ -110,7 +110,7 @@ export default function AddressCollection() {
     shippingCountry: "India",
     shippingAddressLine1: "",
     shippingAddressLine2: "",
-    shippingCity: "",
+    shippingCity: "Bengaluru",
     shippingPincode: "",
     shippingState: "Karnataka",
   });
@@ -154,6 +154,7 @@ export default function AddressCollection() {
           name === "addressLine2" ? value : prevAddress.billingAddressLine2,
         billingCity: name === "city" ? value : prevAddress.billingCity,
         billingPincode: name === "pincode" ? value : prevAddress.billingPincode,
+        billingState: checked ? value : prevAddress.billingState, // Update billingState based on checkbox state
       }));
 
       if (sameAddress) {
@@ -165,6 +166,7 @@ export default function AddressCollection() {
           shippingAddressLine2:
             name === "addressLine2" ? value : prevAddress.shippingAddressLine2,
           shippingCity: name === "city" ? value : prevAddress.shippingCity,
+          shippingState: checked ? value : prevAddress.shippingState, // Update shippingState based on checkbox state
         }));
       }
     } else if (addressType === "shipping") {
@@ -176,30 +178,30 @@ export default function AddressCollection() {
         shippingAddressLine2:
           name === "addressLine2" ? value : prevAddress.shippingAddressLine2,
         shippingCity: name === "city" ? value : prevAddress.shippingCity,
+        shippingState: value, // Update shippingState directly
       }));
     }
   };
 
   const handleSameAddressChange = (event) => {
-    const { checked } = event.target;
-    setSameAddress(checked);
-
-    if (checked) {
-      const sharedPincode = shippingAddress.shippingPincode;
-
-      setBillingAddress((prevAddress) => ({
-        ...prevAddress,
-        billingPincode: sharedPincode,
-      }));
-      setShippingAddress((prevAddress) => ({
-        ...prevAddress,
-        shippingPincode: sharedPincode,
-      }));
+    setSameAddress(event.target.checked);
+    if (event.target.checked) {
+      setBillingAddress({
+        ...billingAddress,
+        billingPincode: pincodeCheck,
+        billingState: "Karnataka",
+      });
+      setShippingAddress({
+        ...shippingAddress,
+        shippingCity: "Bangalore",
+        shippingState: "Karnataka",
+      });
     } else {
-      setBillingAddress((prevAddress) => ({
-        ...prevAddress,
+      setBillingAddress({
+        ...billingAddress,
         billingPincode: "",
-      }));
+        billingState: "",
+      });
     }
   };
 
@@ -220,6 +222,7 @@ export default function AddressCollection() {
         <br />
         <input
           type="text"
+          name="pincode"
           maxLength={6}
           value={pincodeCheck}
           onChange={handlePincodeChange}
@@ -275,6 +278,7 @@ export default function AddressCollection() {
               name="city"
               value={billingAddress.billingCity}
               onChange={(event) => handleChange(event, "billing")}
+              // disabled={sameAddress}
             />
             <br />
             <label>Pincode:</label>
@@ -293,7 +297,7 @@ export default function AddressCollection() {
               type="text"
               name="state"
               value={billingAddress.billingState}
-              disabled
+              disabled={sameAddress}
             />
             <br />
             {!sameAddress && (
@@ -336,6 +340,7 @@ export default function AddressCollection() {
                   name="city"
                   value={shippingAddress.shippingCity}
                   onChange={(event) => handleChange(event, "shipping")}
+                  disabled
                 />
                 <br />
                 <label>Pincode:</label>

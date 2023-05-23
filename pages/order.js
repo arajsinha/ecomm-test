@@ -1,122 +1,91 @@
-import { useEffect, useState } from "react";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { route } from "next/dist/server/router";
+import { initializeApp } from "firebase/app";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, collection, doc, getDoc } from "firebase/firestore";
 
-let session_ids = [];
+import firebaseConfig from "../lib/firebase";
 
-let usermail = "";
-let reload = "";
+const firebase = initializeApp(firebaseConfig);
+const auth = getAuth(firebase);
 
-const stripeApiSessionsUrl =
-  "https://api.stripe.com/v1/checkout/sessions?limit=100";
-
-const getCustomers = async (setProducts, setLoading) => {
-  const response = await fetch(stripeApiSessionsUrl, {
-    method: "GET",
-    headers: {
-      Authorization:
-        "Bearer sk_test_51JB14ISFUaTZgP2dG5KQ620DEmj9g32f3MDKoigmSe07wvRCldYr1CsiEqhMamcI7irOxIOYLGP3jshnYm8lJxBi00yJ9D8sm2",
-      "Content-Type": "application/json",
-    },
-  });
-  const data = await response.json();
-
-  for (let i = 0; i < data.data.length; i++) {
-    if (
-      data.data[i].payment_status === "paid" &&
-      data.data[i].customer_details.email === usermail
-    ) {
-      session_ids.push(data.data[i]);
-    }
-  }
-
-  if (session_ids.length === 0) {
-    setLoading(false);
-  } else {
-    const getProducts = async () => {
-      let tempProducts = [];
-
-      for (let j = 0; j < session_ids.length; j++) {
-        const response = await fetch(
-          `https://api.stripe.com/v1/checkout/sessions/${session_ids[j].id}/line_items?limit=100`,
-          {
-            method: "GET",
-            headers: {
-              Authorization:
-                "Bearer sk_test_51JB14ISFUaTZgP2dG5KQ620DEmj9g32f3MDKoigmSe07wvRCldYr1CsiEqhMamcI7irOxIOYLGP3jshnYm8lJxBi00yJ9D8sm2",
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await response.json();
-        tempProducts.push(data);
-      }
-      setProducts(tempProducts);
-      setLoading(false);
-      console.log(tempProducts);
-    };
-
-    getProducts();
-  }
-};
-
-
-
-export default function order() {
+const OrderHistory = () => {
   const router = useRouter();
-  usermail = router.query.email;
-  reload = router.query.reload;
-  function reloadHash() {
-    // console.log("reload: ", reload)
-    if(reload == "false") {
-        reload = "true";
-        location.replace(`/order?email=${usermail}&reload=true`);
-    }
-}
-
-  console.log("email: ", usermail);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    //   router.replace(router.asPath)
-    setTimeout(reloadHash, 1000)
-    
-    getCustomers(setProducts, setLoading);
-  }, []);
+    const fetchOrderHistory = async (userUid) => {
+      try {
+        const firestore = getFirestore();
+        const userRef = doc(firestore, "users", userUid);
+        const userDoc = await getDoc(userRef);
+
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const userOrders = userData.orders || [];
+
+          setOrders(userOrders);
+        }
+      } catch (error) {
+        console.log("Error fetching order history:", error);
+      }
+    };
+
+    const authStateChanged = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        fetchOrderHistory(user.uid);
+      } else {
+        router.push("/loginmobile?reload=false");
+      }
+    });
+
+    return () => {
+      authStateChanged(); // Unsubscribe from the auth state change listener
+    };
+  }, [router]);
+
+  const formatDate = (timestamp) => {
+    const date = timestamp.toDate();
+    return date.toLocaleDateString(); // Adjust the date formatting as needed
+  };
 
   return (
-    <div className="myorders">
-      <h1>My Orders</h1>
-      <br />
-      {loading && <p>Loading...</p>}
-      {!loading && products.length === 0 && <p>No past orders</p>}
-      <div className="orders">
-        {products.map((product, index) => (
-          <div key={index} className="ordercard">
-            {product.data.map((data, dataIndex) => (
-              <div key={dataIndex}>
-                <h3 className="prod-name">{data.description}</h3>
-                <p className="prod-price">
-                  <span>Unit Price - </span>
-                  {data.currency} {data.price.unit_amount / 100}
-                </p>
-                <p className="prod-qty">
-                  <span>Qty - </span>
-                  {data.quantity}
-                </p>
-                <p className="prod-totalprice">
-                  <span>Total Price - </span>
-                  {data.currency}{" "}
-                  {(data.price.unit_amount / 100) * data.quantity}
-                </p>
-                <br />
-              </div>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <div>
+        <h2 style={{textAlign: "center"}}>Order History</h2>
+        <br />
+        {orders.length > 0 ? (
+          <ul style={{listStyle: "none"}}>
+            {orders.map((order, index) => (
+              <li key={index} style={{backgroundColor: "#eee8ff", padding: "2% 4%", margin: "3% 0", borderRadius: "20px"}}>
+                <div>
+                  {order.productDataLayer.map((product) => (
+                    <div key={product.index}>
+                      <Link href={`/product/${product.slug}`}>
+                        <h3 style={{ cursor: "pointer", color: "#6836f2", marginBottom: "20px" }}>{product.name}</h3>
+                      </Link>
+                      <p><span style={{fontWeight: "600"}}>Unit Price:</span> {product.price}</p>
+                      <p><span style={{fontWeight: "600"}}>Quantity:</span> {product.quantity}</p>
+                      <p><span style={{fontWeight: "600"}}>Total Price:</span> {product.price * product.quantity}</p>
+                      <hr />
+                      {/* Render other product details as needed */}
+                    </div>
+                  ))}
+                </div>
+                {/* Display other order details as needed */}
+                <p><span style={{fontWeight: "600"}}>Delivery Status:</span> {order.delivery_status}</p>
+                <p><span style={{fontWeight: "600"}}>Purchase Date:</span> {formatDate(order.purchaseDate)}</p>
+                <p><span style={{fontWeight: "600"}}>Order ID:</span> {order.txn_id}</p>
+              </li>
             ))}
-          </div>
-        ))}
+          </ul>
+        ) : (
+          <p>No order history found.</p>
+        )}
       </div>
     </div>
   );
-}
+};
+
+export default OrderHistory;

@@ -4,7 +4,7 @@ import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-
+import { collection, doc, getDoc, setDoc, getFirestore } from "firebase/firestore";
 import {
   getAuth,
   signInWithPhoneNumber,
@@ -100,29 +100,58 @@ export default function PhoneInputGfg() {
       });
   }
 
-  function confirm() {
+  async function confirm() {
     const otp = document.querySelector(".otpButton").value;
     console.log(otp);
-    confirmationResult
-      .confirm(otp)
-      .then((result) => {
-        // User signed in successfully.
-        alert("User Signed in Successfully");
-        const user = result.user;
-        // console.log(user.phoneNumber)
-        router.push("/profile");
-        // ...
-      })
-      .catch((error) => {
-        alert("User couldn't sign in");
-        // ...
-      });
+
+    try {
+      const result = await confirmationResult.confirm(otp);
+      const user = result.user;
+      const uid = user.uid;
+      const phoneNumber = "+" + phoneNum;
+
+      await updateUserDocument(uid, phoneNumber, uid);
+
+      alert("User signed in successfully");
+      router.push("/profile");
+    } catch (error) {
+      alert("User couldn't sign in");
+      console.error(error);
+    }
   }
 
   function handleSubmit(e) {
     e.preventDefault();
     phoneNum = phone;
   }
+
+  async function updateUserDocument(uid, phoneNumber) {
+    // Initialize Firebase
+    initializeApp(firebaseConfig);
+  
+    // Get a Firestore reference
+    const firestore = getFirestore();
+  
+    // Create a Firestore reference to the "users" collection
+    const usersCollection = collection(firestore, "users");
+  
+    try {
+      // Check if the user document already exists
+      const userDocumentSnapshot = await getDoc(doc(usersCollection, uid));
+  
+      if (userDocumentSnapshot.exists()) {
+        console.log("User document already exists");
+        return;
+      }
+  
+      // Create the user document with the UID and phone number
+      await setDoc(doc(usersCollection, uid), { uid, phoneNumber });
+      console.log("User document created successfully");
+    } catch (error) {
+      console.error("Error creating user document:", error);
+    }
+  }
+  
 
   return (
     <div className="body-wrap" style={{ height: "60vh" }}>
