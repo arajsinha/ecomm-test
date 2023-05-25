@@ -57,9 +57,6 @@ const Success = () => {
       // Create a Firestore reference to the "users" collection
       const usersCollection = collection(firestore, "users");
 
-      // Create a Firestore reference to the "allOrders" collection
-      const allOrdersCollection = collection(firestore, "allOrders");
-
       // Create a reference to the specific user document using the user_uid
       const userRef = doc(usersCollection, user_uid);
 
@@ -85,8 +82,14 @@ const Success = () => {
             total_amount,
             purchaseDate: new Date(), // Add the purchase date
             delivery_status: "Processing", //all statuses - processing, packed, assigned, shipped, delivered
+            delivery_person: "",
+            delivery_person_phone: "",
+            delivery_person_id: "",
+            uid: user_uid
           };
 
+          // Create a Firestore reference to the "allOrders" collection
+          const allOrdersCollection = collection(firestore, "allOrders");
 
           // Create a reference to the specific order document in the "allOrders" collection using the txn_id
           const allOrdersRef = doc(allOrdersCollection, txn_id);
