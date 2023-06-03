@@ -32,14 +32,14 @@ export default {
       },
     },
     {
-      name: 'details',
-      title: 'Details',
-      type: 'string',
-    },
-    {
       name: 'price',
       title: 'Price',
       type: 'number',
+    },
+    {
+      name: 'details',
+      title: 'Details',
+      type: 'string',
     },
     {
       name: 'original',

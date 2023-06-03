@@ -23,13 +23,32 @@ import {
 } from "firebase/auth";
 
 const ProductDetails = ({ product, products }) => {
-  const { image, name, details, price, original, mattressOptions, height } =
-    product;
+  const { image, name, details, original, mattressOptions, height } = product;
   const [index, setIndex] = useState(0);
   const { decQty, incQty, qty, onAdd, setShowCart } = useStateContext();
-  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedSize, setSelectedSize] = useState(
+    mattressOptions?.[0]?.mattressSize || ""
+  );
+  const [selectedCardIndex, setSelectedCardIndex] = useState(0);
+  const [selectedHeightCard, setSelectedHeightCard] = useState(
+    height?.[0]?.basePrice || 0
+  );
   const [wishlistStatus, setWishlistStatus] = useState(false);
   const [isLoggedInUser, setIsLoggedInUser] = useState(false);
+  const [price, setPrice] = useState(
+    selectedHeightCard +
+      (mattressOptions?.[0]?.dependentMattressDimensions?.[0]?.basePrice || 0)
+  );
+
+  useEffect(() => {
+    // Set the selected card to the first card when the selected size changes
+    if (selectedSize && selectedCardIndex === null && mattressOptions) {
+      const firstCardIndex = mattressOptions.findIndex(
+        (option) => option.mattressSize === selectedSize
+      );
+      setSelectedCardIndex(firstCardIndex);
+    }
+  }, [selectedSize, selectedCardIndex, mattressOptions]);
 
   useEffect(() => {
     // Fire 'view_item' event on page load
@@ -69,9 +88,11 @@ const ProductDetails = ({ product, products }) => {
     const itemData = {
       item_name: product.name,
       item_slug: product.slug.current,
-      item_price: product.price,
+      item_price: price,
       // Add any other relevant item attributes
     };
+    console.log("slug price");
+    console.log(itemData.item_price);
     window.dataLayer.push({
       event: "add_to_cart",
       user_logged_in: login,
@@ -87,7 +108,7 @@ const ProductDetails = ({ product, products }) => {
     const wishlistItem = {
       name: product.name,
       slug: product.slug.current,
-      price: product.price,
+      price: price,
       image: product.image,
     };
 
@@ -128,17 +149,49 @@ const ProductDetails = ({ product, products }) => {
     setWishlistStatus(true);
   };
 
-  function handleSizeSelection(size) {
+  const handleSizeSelection = (size) => {
     setSelectedSize(size);
-  }
+    setSelectedCardIndex(null); // Reset the selected card index when the size is changed
+  };
+
+  const handleCardClick = (basePrice, index) => {
+    setSelectedCardIndex(index);
+    const selectedSizeOption = mattressOptions.find(
+      (option) => option.mattressSize === selectedSize
+    );
+
+    if (selectedSizeOption) {
+      const mattressPrice =
+        selectedSizeOption.dependentMattressDimensions[index].basePrice;
+      updateProductPrice(mattressPrice, selectedHeightCard);
+    }
+  };
+
+  const handleHeightClick = (basePrice) => {
+    setSelectedHeightCard(basePrice);
+    const selectedSizeOption = mattressOptions.find(
+      (option) => option.mattressSize === selectedSize
+    );
+
+    if (selectedSizeOption) {
+      const mattressPrice =
+        selectedSizeOption.dependentMattressDimensions[selectedCardIndex]
+          .basePrice;
+      updateProductPrice(mattressPrice, basePrice);
+    }
+  };
+
+  const updateProductPrice = (mattressPrice, heightPrice) => {
+    const totalPrice = mattressPrice + heightPrice;
+    setPrice(totalPrice);
+  };
 
   const handleBuyNow = () => {
-    onAdd(product, qty);
-
+    onAdd(product, qty, price); // Pass the price value to the onAdd function
+  
     handleAddToCart();
-
+  
     setShowCart(true);
-
   };
 
   function calcDiscount(original, price) {
@@ -213,7 +266,7 @@ const ProductDetails = ({ product, products }) => {
               type="button"
               className="add-to-cart"
               onClick={() => {
-                onAdd(product, qty);
+                onAdd(product, qty, price);
                 handleAddToCart();
               }}
             >
@@ -250,53 +303,73 @@ const ProductDetails = ({ product, products }) => {
           <br />
           {mattressOptions && (
             <div className="variantHolder">
-              <h2>Choose a Size</h2>
-              <br />
-              <div className="sizeButtons">
-                {mattressOptions.map((option) => (
-                  <button
-                    style={{
-                      marginRight: "10px",
-                      padding: "5px 10px",
-                      borderRadius: "50px",
-                      border: "none",
-                      backgroundColor: "black",
-                      color: "white",
-                      cursor: "pointer",
-                    }}
-                    key={option._key}
-                    onClick={() => handleSizeSelection(option.mattressSize)}
-                    className={
-                      option.mattressSize === selectedSize ? "selectedSize" : ""
-                    }
-                  >
-                    {option.mattressSize}
-                  </button>
-                ))}
-              </div>
-              <br />
-              <h3>{selectedSize}</h3>
-              <br />
-              {selectedSize && (
-                <div
-                  className="sizeDetails"
-                  style={{ display: "flex", flexWrap: "wrap" }}
-                >
-                  {mattressOptions.map((option) =>
-                    option.mattressSize === selectedSize
-                      ? option.dependentMattressDimensions.map(
-                          (dimension, index) => (
-                            <div key={index} className="productDimensionCard">
-                              <p>
-                                {dimension.length} x {dimension.width} inches
-                              </p>
-                            </div>
-                          )
-                        )
-                      : null
-                  )}
+              <div>
+                <h2>Choose a Size</h2>
+                <br />
+                <div className="sizeButtons">
+                  {mattressOptions.map((option) => (
+                    <button
+                      style={{
+                        marginRight: "10px",
+                        padding: "5px 10px",
+                        borderRadius: "50px",
+                        border: "none",
+                        backgroundColor: "black",
+                        color: "white",
+                        cursor: "pointer",
+                      }}
+                      key={option._key}
+                      onClick={() => handleSizeSelection(option.mattressSize)}
+                      className={
+                        option.mattressSize === selectedSize
+                          ? "selectedSize"
+                          : ""
+                      }
+                    >
+                      {option.mattressSize}
+                    </button>
+                  ))}
                 </div>
-              )}
+                <br />
+                <h3>{selectedSize}</h3>
+                <br />
+                {selectedSize && (
+                  <div
+                    className="sizeDetails"
+                    style={{ display: "flex", flexWrap: "wrap" }}
+                  >
+                    {mattressOptions.map((option, index) =>
+                      option.mattressSize === selectedSize
+                        ? option.dependentMattressDimensions.map(
+                            (dimension, cardIndex) => (
+                              <div
+                                key={cardIndex}
+                                className={`productDimensionCard ${
+                                  selectedCardIndex === cardIndex
+                                    ? "selectedCard"
+                                    : ""
+                                }`}
+                                onClick={() =>
+                                  handleCardClick(
+                                    dimension.basePrice,
+                                    cardIndex
+                                  )
+                                }
+                              >
+                                <p>
+                                  {dimension.length} x {dimension.width} inches
+                                </p>
+                                <p style={{ fontSize: "12px", color: "green" }}>
+                                  Rs {dimension.basePrice}
+                                </p>
+                              </div>
+                            )
+                          )
+                        : null
+                    )}
+                  </div>
+                )}
+              </div>
               <br />
               <h3>Height</h3>
               <br />
@@ -309,19 +382,38 @@ const ProductDetails = ({ product, products }) => {
               >
                 {height.map((option) => (
                   <div
+                    className={`heightCard ${
+                      selectedHeightCard === option.basePrice
+                        ? "selectedHeight"
+                        : ""
+                    }`}
                     key={option._key}
                     style={{
-                      border: "1px solid #ddd",
+                      border:
+                        selectedHeightCard === option.basePrice
+                          ? "1px solid black"
+                          : "1px solid #ddd",
                       borderRadius: "10px",
-                      padding: "10px",
+                      padding: "20px",
                       marginRight: "10px",
                       width: "10rem",
                       marginBottom: "10px",
                       cursor: "pointer",
+                      textAlign: "left",
                       boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                     }}
+                    onClick={() => handleHeightClick(option.basePrice)}
                   >
                     <p>{option.height} inches</p>
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        color: "green",
+                        textAlign: "left",
+                      }}
+                    >
+                      Rs {option.basePrice}
+                    </p>
                   </div>
                 ))}
               </div>

@@ -74,16 +74,16 @@ a {
   box-shadow: 4px 6px 11px 0px rgba(0, 0, 0, 0.46);
 }
 
-.hoverNavbar:hover{
+.hoverNavbar:hover {
   visibility: hidden;
 }
 
-.hoverNavbar li{
+.hoverNavbar li {
   color: black;
   margin: 10px;
 }
 
-.hoverLink{
+.hoverLink {
   text-decoration: none !important;
   color: black;
 }
@@ -757,12 +757,12 @@ span.text-red {
   font-size: 20px;
 }
 
-.wishlistProductName{
+.wishlistProductName {
   color: black;
   text-decoration: none;
 }
 
-.wishlistProductName:hover{
+.wishlistProductName:hover {
   color: red;
 }
 
@@ -1129,6 +1129,14 @@ span.text-red {
   background-color: #f2f2f2;
   border: 1px solid #ddd;
   cursor: pointer;
+}
+
+.selectedCard {
+  border: 1px solid black;
+}
+
+.selectedHeight {
+  border: 2px solid black;
 }
 
 

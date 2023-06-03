@@ -8,10 +8,16 @@ const HeroImageBanner = ({heroBanner}) => {
     <Carousel fade>
       <Carousel.Item>
         <Link href={`#`}>
+          {/* <img
+            className="d-block w-100"
+            src={urlFor(heroBanner[0].image[0].image)}
+            // src={urlFor(heroBanner.image)}
+            style={{ borderRadius: "15px", cursor: "pointer" }}
+            alt="First slide"
+          /> */}
           <img
             className="d-block w-100"
-            src="https://wakefitdev.gumlet.io/consumer-react/Stories-bg/7th-bday-sale-xpertgrid-mattress-h2.webp"
-            // src={urlFor(heroBanner.image)}
+            src="https://wakefitdev.gumlet.io/consumer-react/Stories-bg/plus-mattress-h2-v1.webp"
             style={{ borderRadius: "15px", cursor: "pointer" }}
             alt="First slide"
           />

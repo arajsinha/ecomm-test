@@ -67,6 +67,7 @@ export default function AddressCollection() {
       // itemDetails.forEach((item) => {
       //   console.log(item);
       // });
+      console.log(cartItems)
       productDetails = JSON.stringify(itemDetails);
     };
 

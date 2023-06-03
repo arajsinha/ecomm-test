@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { handleData } from "../components/dataHandler";
 import { client } from "../lib/client";
 import { Product, FooterBanner, HeroBanner } from "../components";
+import NeendBanner from "../components/NeendBanner";
 import Widget from "../components/Widget";
 import HeroImageBanner from "../components/HeroImageBanner";
 import HappyStrip from "../components/HappyStrip";
@@ -12,12 +13,20 @@ import Category from "../components/Category";
 import Link from "next/link";
 
 const Home = ({ products, bannerData }) => {
+  //For NeendBanner
+  console.log("bannerData:", bannerData)
+  const [images, setImages] = useState([]);
   const productArray = products;
   handleData(productArray);
   console.log(productArray);
+
+ 
+
   return (
     <div>
-      <HeroImageBanner heroBanner={bannerData.length && bannerData[0]} />
+      {/* <HeroBanner heroBanner={bannerData}/> */}
+      {/* <NeendBanner images={images} /> */}
+      <HeroImageBanner heroBanner={bannerData} />
       <HappyStrip />
       {/* <Widget /> */}
       <div className="collection-products ">
