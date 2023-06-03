@@ -167,9 +167,9 @@ const Cart = () => {
                   className="cart-product-image"
                 />
                 <div className="item-desc">
-                  <div className="flex top">
+                  <div className="top">
                     <h5>{item.name}</h5>
-                    <h4>₹{item.price}</h4>
+                    <h4 style={{color: "green"}}>₹{item.price}</h4>
                   </div>
                   <div className="flex bottom">
                     <div>
