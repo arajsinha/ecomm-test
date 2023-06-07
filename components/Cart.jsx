@@ -114,6 +114,9 @@ const Cart = () => {
           <span className="cart-num-items">({totalQuantities} items)</span>
         </button>
         <br />
+        <div className="progress-tracker">
+          <p style={{color: 'green'}}>Step 1/3</p>
+        </div>
         <div className="pincode-container">
           <label htmlFor="pincode">Enter pincode:</label>
           <input

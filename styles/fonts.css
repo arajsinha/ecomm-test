@@ -1,18 +1,18 @@
 @font-face {
     font-family: recoletalight;
-    src: url(../public/fonts/Recoleta-Light.ttf);
+    src: url(../public/fonts/Gazpacho-Light.ttf);
   }
   @font-face {
     font-family: recoletamid;
-    src: url(../public/fonts/Recoleta-Medium.ttf);
+    src: url(../public/fonts/Gazpacho-Medium.ttf);
   }
   
   @font-face {
     font-family: recoletareg;
-    src: url(../public/fonts/Recoleta-Regular.ttf);
+    src: url(../public/fonts/Gazpacho-Regular.ttf);
   }
   @font-face {
     font-family: recoletasemi;
-    src: url(../public/fonts/Recoleta-SemiBold.ttf);
+    src: url(../public/fonts/Gazpacho-Bold.ttf);
   }
   

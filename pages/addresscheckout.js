@@ -21,6 +21,7 @@ const auth = getAuth(firebase);
 let uid;
 
 export default function AddressCollection() {
+  const [preFillCity, setPreFillCity] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -54,6 +55,15 @@ export default function AddressCollection() {
     let itemDetails;
 
     const cartData = () => {
+      if (!query || !Array.isArray(query) || query.length === 0) {
+        // No items in the cart
+        console.warn("No items in the cart.");
+        alert("No items in the cart.");
+        // Redirect to the home page
+        window.location.href = "/"; // Replace "/" with the desired home page URL
+        return;
+      }
+
       const cartItems = JSON.parse(query);
       itemDetails = cartItems.map((item, index) => ({
         index: index,
@@ -64,10 +74,6 @@ export default function AddressCollection() {
         slug: item.slug.current,
       }));
 
-      // itemDetails.forEach((item) => {
-      //   console.log(item);
-      // });
-      console.log(cartItems)
       productDetails = JSON.stringify(itemDetails);
     };
 
@@ -153,9 +159,14 @@ export default function AddressCollection() {
           name === "addressLine1" ? value : prevAddress.billingAddressLine1,
         billingAddressLine2:
           name === "addressLine2" ? value : prevAddress.billingAddressLine2,
-        billingCity: name === "city" ? value : prevAddress.billingCity,
+        billingCity:
+          name === "city"
+            ? preFillCity
+              ? "Bengaluru"
+              : value
+            : prevAddress.billingCity,
         billingPincode: name === "pincode" ? value : prevAddress.billingPincode,
-        billingState: checked ? value : prevAddress.billingState, // Update billingState based on checkbox state
+        billingState: checked ? value : prevAddress.billingState,
       }));
 
       if (sameAddress) {
@@ -167,7 +178,7 @@ export default function AddressCollection() {
           shippingAddressLine2:
             name === "addressLine2" ? value : prevAddress.shippingAddressLine2,
           shippingCity: name === "city" ? value : prevAddress.shippingCity,
-          shippingState: checked ? value : prevAddress.shippingState, // Update shippingState based on checkbox state
+          shippingState: checked ? value : prevAddress.shippingState,
         }));
       }
     } else if (addressType === "shipping") {
@@ -186,15 +197,17 @@ export default function AddressCollection() {
 
   const handleSameAddressChange = (event) => {
     setSameAddress(event.target.checked);
+
     if (event.target.checked) {
-      setBillingAddress({
-        ...billingAddress,
+      setBillingAddress((prevAddress) => ({
+        ...prevAddress,
         billingPincode: pincodeCheck,
         billingState: "Karnataka",
-      });
+        billingCity: "Bengaluru", // Pre-fill the city field with "Bengaluru"
+      }));
       setShippingAddress({
         ...shippingAddress,
-        shippingCity: "Bangalore",
+        shippingCity: "Bengaluru", // Pre-fill the shipping city field with "Bengaluru"
         shippingState: "Karnataka",
       });
     } else {
@@ -204,6 +217,8 @@ export default function AddressCollection() {
         billingState: "",
       });
     }
+
+    setPreFillCity(event.target.checked); // Set preFillCity state based on the checkbox status
   };
 
   const handleSubmit = (event) => {
@@ -216,6 +231,9 @@ export default function AddressCollection() {
 
   return (
     <div className="pincodeContainerAddress">
+      <div className="progress-tracker">
+        <p style={{ color: "green" }}>Step 2/3</p>
+      </div>
       <h1>Confirm Pincode</h1>
       <br />
       <form onSubmit={handleSubmit}>
@@ -279,8 +297,9 @@ export default function AddressCollection() {
               name="city"
               value={billingAddress.billingCity}
               onChange={(event) => handleChange(event, "billing")}
-              // disabled={sameAddress}
+              disabled={sameAddress} // Disable the input field when sameAddress is true
             />
+
             <br />
             <label>Pincode:</label>
             <br />

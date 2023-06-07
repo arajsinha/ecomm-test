@@ -31,7 +31,7 @@ const Home = ({ products, bannerData }) => {
       {/* <Widget /> */}
       <div className="collection-products ">
         <div className="products-heading">
-          <h2>Shop Our Collection</h2>
+          <h2>Our Products</h2>
           {/* <p>We have some amazing products</p> */}
         </div>
 
