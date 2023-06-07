@@ -22,8 +22,18 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
+//TODO: Need specifications.
+
 const ProductDetails = ({ product, products }) => {
-  const { image, name, details, original, mattressOptions, height } = product;
+  const {
+    image,
+    name,
+    details,
+    original,
+    mattressOptions,
+    height,
+    specifications,
+  } = product;
   const [index, setIndex] = useState(0);
   const { decQty, incQty, qty, onAdd, setShowCart } = useStateContext();
   const [selectedSize, setSelectedSize] = useState(
@@ -188,9 +198,9 @@ const ProductDetails = ({ product, products }) => {
 
   const handleBuyNow = () => {
     onAdd(product, qty, price); // Pass the price value to the onAdd function
-  
+
     handleAddToCart();
-  
+
     setShowCart(true);
   };
 
@@ -241,7 +251,7 @@ const ProductDetails = ({ product, products }) => {
           <h4>Details: </h4>
           <p>{details}</p>
           <div className="price-discount-holder">
-            <p className="product-price slugger" style={{ color: "#5430b3" }}>
+            <p className="product-price slugger" style={{ color: "#ff7a32" }}>
               ₹{price}
             </p>
             <p className="product-origprice slugger">₹{original}</p>
@@ -301,6 +311,23 @@ const ProductDetails = ({ product, products }) => {
             )}
           </div>
           <br />
+          <div className="specifications">
+            <h2>Specifications</h2>
+            <br />
+            <div className="specs-holder">
+              {specifications && specifications.length > 0 ? (
+                specifications.map((option) => (
+                  <div className="allSpecs" key={option.key}>
+                    <h5 className="specsTitle">{option.specTitle}</h5>
+                    <p className="specsDesc">{option.specDesc}</p>
+                  </div>
+                ))
+              ) : (
+                <p>No specifications available.</p>
+              )}
+            </div>
+          </div>
+
           {mattressOptions && (
             <div className="variantHolder">
               <div>
@@ -314,7 +341,7 @@ const ProductDetails = ({ product, products }) => {
                         padding: "5px 10px",
                         borderRadius: "50px",
                         border: "none",
-                        backgroundColor: "black",
+                        backgroundColor: "#ff7a32",
                         color: "white",
                         cursor: "pointer",
                       }}

@@ -40,8 +40,8 @@ const Home = ({ products, bannerData }) => {
             {
               console.log(product.name);
             }
-
-            return <Product key={product._id} product={product} />;
+            if(product.category=='mattress')
+              return <Product key={product._id} product={product} />;
           })}
         </div>
         <Link href="/categorypages/allProducts">
@@ -52,14 +52,14 @@ const Home = ({ products, bannerData }) => {
       </div>
       <hr />
 
-      <div className="products-heading category-heading">
+      {/* <div className="products-heading category-heading">
         <h2>Shop By Categories</h2>
       </div>
       <div className="products-container category-container">
         <Category />
-      </div>
+      </div> */}
 
-      <div className="flash-sale">
+      {/* <div className="flash-sale">
         <div className="products-heading flash-sale-heading">
           <h2>Flash Sale</h2>
         </div>
@@ -73,7 +73,7 @@ const Home = ({ products, bannerData }) => {
             <button>View All</button>
           </div>
         </Link>
-      </div>
+      </div> */}
 
       <div id="info">
         <Info />

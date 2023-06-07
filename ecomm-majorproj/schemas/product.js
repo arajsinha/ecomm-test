@@ -113,5 +113,27 @@ export default {
         },
       ],
     },
+    {
+      name: 'specifications',
+      title: 'Specifications',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'specTitle',
+              title: 'Title',
+              type: 'string',
+            },
+            {
+              name: 'specDesc',
+              title: 'Description',
+              type: 'string',
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

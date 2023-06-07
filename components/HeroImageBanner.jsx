@@ -17,7 +17,7 @@ const HeroImageBanner = ({heroBanner}) => {
           /> */}
           <img
             className="d-block w-100"
-            src="https://wakefitdev.gumlet.io/consumer-react/Stories-bg/plus-mattress-h2-v1.webp"
+            src="https://res.cloudinary.com/dwkhm30wx/image/upload/v1686156306/main_sjcwqv.jpg"
             style={{ borderRadius: "15px", cursor: "pointer" }}
             alt="First slide"
           />
@@ -29,7 +29,7 @@ const HeroImageBanner = ({heroBanner}) => {
         <Link href={`#`}>
           <img
             className="d-block w-100"
-            src="https://wakefitdev.gumlet.io/consumer-react/Stories-bg/plus-mattress-h2-v1.webp"
+            src="https://res.cloudinary.com/dwkhm30wx/image/upload/v1686158637/main2_zixhhr.jpg"
             style={{ borderRadius: "15px", cursor: "pointer" }}
             alt="First slide"
           />
@@ -39,7 +39,7 @@ const HeroImageBanner = ({heroBanner}) => {
         <Link href={`#`}>
           <img
             className="d-block w-100"
-            src="https://wakefitdev.gumlet.io/consumer-react/Stories-bg/Pricedrop-wallet-h2.webp"
+            src="https://res.cloudinary.com/dwkhm30wx/image/upload/v1686158637/main3_moawpu.jpg"
             style={{ borderRadius: "15px", cursor: "pointer" }}
             alt="First slide"
           />
@@ -49,13 +49,13 @@ const HeroImageBanner = ({heroBanner}) => {
         <Link href={`#`}>
           <img
             className="d-block w-100"
-            src="https://wakefitdev.gumlet.io/consumer-react/Stories-bg/sofa-plus-series-v1.webp"
+            src="https://res.cloudinary.com/dwkhm30wx/image/upload/v1686158637/main4_tqbacx.jpg"
             style={{ borderRadius: "15px", cursor: "pointer" }}
             alt="First slide"
           />
         </Link>
       </Carousel.Item>
-      <Carousel.Item>
+      {/* <Carousel.Item>
         <Link href={`#`}>
           <img
             className="d-block w-100"
@@ -64,7 +64,7 @@ const HeroImageBanner = ({heroBanner}) => {
             alt="First slide"
           />
         </Link>
-      </Carousel.Item>
+      </Carousel.Item> */}
     </Carousel>
   );
 };
