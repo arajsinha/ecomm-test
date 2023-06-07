@@ -167,7 +167,7 @@ export default function PhoneInputGfg() {
         <div
           className="log-in"
           style={{
-            backgroundColor: "#eee8ff",
+            backgroundColor: "#f5cfba",
             padding: "3%",
             borderRadius: "20px",
           }}

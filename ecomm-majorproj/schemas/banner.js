@@ -4,13 +4,34 @@ export default {
   type: 'document',
   fields: [
     {
-      name: 'image',
-      title: 'Image',
+      name: 'images',
+      title: 'Images',
       type: 'array',
-      of: [{type: 'image'}],
-      options: {
-        hotspot: true,
-      },
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'image',
+              title: 'Image',
+              type: 'image',
+              options: {
+                hotspot: true,
+              },
+            },
+            {
+              name: 'link',
+              title: 'Link',
+              type: 'url',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'product',
+      title: 'Product',
+      type: 'string',
     },
   ],
 }

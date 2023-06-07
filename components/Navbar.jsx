@@ -74,13 +74,15 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <a href="/" className="navbar-logo">
-        <img
-          style={{ cursor: "pointer", width: "20%" }}
-          src="https://res.cloudinary.com/dwkhm30wx/image/upload/v1679340948/SP-EComm/neend_g05ogi.jpg"
-          alt="Logo"
-        />
-      </a>
+      <Link href="/" className="navbar-logo">
+        <a>
+          <img
+            style={{ cursor: "pointer", width: "20%", textAlign: "center", marginTop: "-30px" }}
+            src="https://res.cloudinary.com/dwkhm30wx/image/upload/v1679340948/SP-EComm/neend_g05ogi.jpg"
+            alt="Logo"
+          />
+        </a>
+      </Link>
       <button
         className="navbar-toggler menu-icon"
         type="button"

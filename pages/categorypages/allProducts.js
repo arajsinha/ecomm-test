@@ -2,7 +2,7 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { client } from "../../lib/client";
-import { Product} from "../../components";
+import { Product } from "../../components";
 import FooterMain from "../../components/FooterMain";
 // import product from "@/ecomm-majorproj/schemas/product";
 
@@ -14,10 +14,14 @@ const AllProducts = ({ products }) => (
     </div>
     <div className="products-container">
       {products?.map((product, index) => {
-            return <Product key={product._id} product={product} />
+        if (product.category === "mattress") {
+          return <Product key={product._id} product={product} />;
+        }
+        return null;
       })}
     </div>
-    <FooterMain/>
+    <br /><br /><br />
+    <FooterMain />
   </div>
 );
 

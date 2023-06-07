@@ -398,58 +398,63 @@ const ProductDetails = ({ product, products }) => {
                 )}
               </div>
               <br />
-              <h3>Height</h3>
-              <br />
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  textAlign: "center",
-                }}
-              >
-                {height.map((option) => (
+              {height.length > 0 && (
+                <>
+                  <br />
+                  <h3>Height</h3>
+                  <br />
                   <div
-                    className={`heightCard ${
-                      selectedHeightCard === option.basePrice
-                        ? "selectedHeight"
-                        : ""
-                    }`}
-                    key={option._key}
                     style={{
-                      border:
-                        selectedHeightCard === option.basePrice
-                          ? "1px solid black"
-                          : "1px solid #ddd",
-                      borderRadius: "10px",
-                      padding: "20px",
-                      marginRight: "10px",
-                      width: "10rem",
-                      marginBottom: "10px",
-                      cursor: "pointer",
-                      textAlign: "left",
-                      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                      display: "flex",
+                      flexWrap: "wrap",
+                      textAlign: "center",
                     }}
-                    onClick={() => handleHeightClick(option.basePrice)}
                   >
-                    <p>{option.height} inches</p>
-                    <p
-                      style={{
-                        fontSize: "12px",
-                        color: "green",
-                        textAlign: "left",
-                      }}
-                    >
-                      Rs {option.basePrice}
-                    </p>
+                    {height.map((option) => (
+                      <div
+                        className={`heightCard ${
+                          selectedHeightCard === option.basePrice
+                            ? "selectedHeight"
+                            : ""
+                        }`}
+                        key={option._key}
+                        style={{
+                          border:
+                            selectedHeightCard === option.basePrice
+                              ? "1px solid black"
+                              : "1px solid #ddd",
+                          borderRadius: "10px",
+                          padding: "20px",
+                          marginRight: "10px",
+                          width: "10rem",
+                          marginBottom: "10px",
+                          cursor: "pointer",
+                          textAlign: "left",
+                          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                        }}
+                        onClick={() => handleHeightClick(option.basePrice)}
+                      >
+                        <p>{option.height} inches</p>
+                        <p
+                          style={{
+                            fontSize: "12px",
+                            color: "green",
+                            textAlign: "left",
+                          }}
+                        >
+                          Rs {option.basePrice}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              )}
             </div>
           )}
         </div>
       </div>
 
-      <div className="maylike-products-wrapper">
+      {/* <div className="maylike-products-wrapper">
         <h2>You may also like</h2>
         <div className="marquee">
           <div className="maylike-products-container track">
@@ -461,7 +466,7 @@ const ProductDetails = ({ product, products }) => {
             })}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
