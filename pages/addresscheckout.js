@@ -226,6 +226,9 @@ export default function AddressCollection() {
 
   return (
     <div className="pincodeContainerAddress">
+      <div className="progress-tracker">
+        <p style={{ color: "green" }}>Step 2/3</p>
+      </div>
       <h1>Confirm Pincode</h1>
       <br />
       <form onSubmit={handleSubmit}>

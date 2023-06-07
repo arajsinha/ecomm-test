@@ -222,7 +222,7 @@ const Cart = () => {
                 className="btn"
                 onClick={handleCheckout}
                 disabled={!isPincodeValid}
-                style={{ color: "white" }}
+                style={{ color: "black" }}
               >
                 Pay with Stripe
               </button>
