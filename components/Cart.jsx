@@ -157,9 +157,8 @@ const Cart = () => {
           </div>
         )}
 
-        <div
-          className="product-container"
-          style={{ overflowY: "auto", paddingBottom: "10rem" }}
+        <div className="product-container"
+          style={{ overflowY: "auto", paddingBottom: "20rem" }}
         >
           {cartItems.length >= 1 &&
             cartItems.map((item) => (
@@ -210,6 +209,7 @@ const Cart = () => {
               </div>
             ))}
         </div>
+        <br /><br />
         {cartItems.length >= 1 && (
           <div className="cart-bottom">
             <div className="total">

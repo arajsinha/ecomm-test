@@ -55,15 +55,6 @@ export default function AddressCollection() {
     let itemDetails;
 
     const cartData = () => {
-      if (!query || !Array.isArray(query) || query.length === 0) {
-        // No items in the cart
-        console.warn("No items in the cart.");
-        alert("No items in the cart.");
-        // Redirect to the home page
-        window.location.href = "/"; // Replace "/" with the desired home page URL
-        return;
-      }
-
       const cartItems = JSON.parse(query);
       itemDetails = cartItems.map((item, index) => ({
         index: index,
@@ -74,6 +65,10 @@ export default function AddressCollection() {
         slug: item.slug.current,
       }));
 
+      // itemDetails.forEach((item) => {
+      //   console.log(item);
+      // });
+      console.log(cartItems);
       productDetails = JSON.stringify(itemDetails);
     };
 
@@ -166,7 +161,7 @@ export default function AddressCollection() {
               : value
             : prevAddress.billingCity,
         billingPincode: name === "pincode" ? value : prevAddress.billingPincode,
-        billingState: checked ? value : prevAddress.billingState,
+        billingState: sameAddress ? prevAddress.billingState : value, // Update the value conditionally
       }));
 
       if (sameAddress) {
@@ -178,7 +173,7 @@ export default function AddressCollection() {
           shippingAddressLine2:
             name === "addressLine2" ? value : prevAddress.shippingAddressLine2,
           shippingCity: name === "city" ? value : prevAddress.shippingCity,
-          shippingState: checked ? value : prevAddress.shippingState,
+          shippingState: prevAddress.shippingState, // Use the previous value for shippingState
         }));
       }
     } else if (addressType === "shipping") {
@@ -190,7 +185,7 @@ export default function AddressCollection() {
         shippingAddressLine2:
           name === "addressLine2" ? value : prevAddress.shippingAddressLine2,
         shippingCity: name === "city" ? value : prevAddress.shippingCity,
-        shippingState: value, // Update shippingState directly
+        shippingState: value,
       }));
     }
   };
@@ -231,9 +226,6 @@ export default function AddressCollection() {
 
   return (
     <div className="pincodeContainerAddress">
-      <div className="progress-tracker">
-        <p style={{ color: "green" }}>Step 2/3</p>
-      </div>
       <h1>Confirm Pincode</h1>
       <br />
       <form onSubmit={handleSubmit}>
@@ -318,10 +310,14 @@ export default function AddressCollection() {
               name="state"
               value={billingAddress.billingState}
               disabled={sameAddress}
+              onChange={(event) => handleChange(event, "billing")}
             />
+
             <br />
             {!sameAddress && (
               <>
+                <br />
+                <br />
                 <h2>Shipping Address</h2>
                 <label>Name:</label>
                 <br />
