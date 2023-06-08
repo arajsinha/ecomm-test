@@ -82,7 +82,7 @@ const Navbar = () => {
               cursor: "pointer",
               width: "20%",
               textAlign: "center",
-              marginTop: "-20px",
+              marginTop: "-40px",
             }}
             src="https://res.cloudinary.com/dwkhm30wx/image/upload/v1679340948/SP-EComm/neend_g05ogi.jpg"
             alt="Logo"
