@@ -26,6 +26,9 @@ const Home = ({ products, bannerData }) => {
     <div>
       {/* <HeroBanner heroBanner={bannerData}/> */}
       {/* <NeendBanner images={images} /> */}
+      <div className="testmode">
+        <h4 style={{color: '#eed202', textAlign: 'center'}}>This Site is under Testing.</h4>
+      </div>
       <HeroImageBanner heroBanner={bannerData} />
       <HappyStrip />
       {/* <Widget /> */}

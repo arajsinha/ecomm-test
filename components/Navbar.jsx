@@ -76,14 +76,8 @@ const Navbar = () => {
     <nav className="navbar">
       <Link href="/" className="navbar-logo">
         <a>
-        {/* TODO: change margin properly for phone */}
           <img
-            style={{
-              cursor: "pointer",
-              width: "20%",
-              textAlign: "center",
-              marginTop: "-40px",
-            }}
+            style={{ cursor: "pointer", width: "20%", textAlign: "center", marginTop: "-30px" }}
             src="https://res.cloudinary.com/dwkhm30wx/image/upload/v1679340948/SP-EComm/neend_g05ogi.jpg"
             alt="Logo"
           />
@@ -99,19 +93,6 @@ const Navbar = () => {
         <span className="navbar-toggler-icon"></span>
       </button>
       <ul className={click ? "nav-menu active" : "nav-menu"}>
-        <li className="nav-item">
-          <span
-            style={{
-              backgroundColor: "yellow",
-              marginRight: "20px",
-              padding: "5px",
-              borderRadius: "10px",
-              fontSize: "10px",
-            }}
-          >
-            Test Mode
-          </span>
-        </li>
         {!isMobile && (
           <li
             className="nav-item"
@@ -120,17 +101,6 @@ const Navbar = () => {
           >
             <Link className="nav-links" onClick={closeMobileMenu} href="/">
               <a href="/" className="nav-link">
-                {/* <span
-                  style={{
-                    backgroundColor: "yellow",
-                    marginRight: "53px",
-                    padding: "5px",
-                    borderRadius: "10px",
-                    fontSize: "10px",
-                  }}
-                >
-                  Test Mode
-                </span> */}
                 Mattresses
               </a>
             </Link>
